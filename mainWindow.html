@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Agenda</title>
+    <style>
+    li{
+      margin-top: 20px;
+    } 
+
+    li:first-child {
+      margin-top:0;
+    }
+
+    div.remove {
+      position: absolute;
+      left: 100px;
+      border: 3px solid #73AD21;
+    }
+    </style>
+  </head>
+  <body>
+
+    <h1>The Agenda</h1>
+    <form id="aInfo">
+    Name: <input type="text" id="Name" autofocus>   Date: <input class="date" type="date" id="Date">   Link: <input type="text" id="Link">
+    <button type="submit" id="Finish">Finish</button>
+    <ul id="taskList"></ul>
+    </form>
+
+    <script type="text/javascript" src="js/window.js"></script>
+
+
+
+
+  </body>
+</html>

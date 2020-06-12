@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   document.getElementById("Date").valueAsDate = new Date();
 
 
-});
+
 var form = document.getElementById("aInfo");
 
 var list = document.getElementById("taskList");
@@ -20,11 +20,6 @@ var months = {
   11: "November",
   12: "December"
 };
-document.addEventListener("keypress", function onEvent(event) {
-  if (event.key === "Enter") {
-    document.getElementById("Link").value = getSelectionText();
-  }
-});
 
  // var removeButtons = document.getElementsByTagName("button");
  // var buttonsCount = removeButtons.length;
@@ -48,31 +43,37 @@ form.addEventListener('submit', function (event) {
   //Remove button formatting
   //Some slick string manipulation to get the link tag to work correctly
   if (name != '') {
-  list.innerHTML += '<li id=' + name + '>' + '<a href=' + link + ">" + name + "</a>" +": " + dateString +  ' ' + '<button onclick=remove(this.id) type=button class=REMOVE id=' + name + '>' + 'X' + '</button>' + '</li>';
+  list.innerHTML += '<li id=' + name + 'LIS' + '>' + '<a href=' + link + '>' + name + '</a>' +': ' + dateString + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' + '</li>';
+  }
+
+  console.log(document.getElementById(name));
+  buttons = document.getElementsByClassName('Remove');
+  numB = buttons.length;
+  for (var i = 0; i < numB; i += 1) {
+      buttons[i].addEventListener('click', function () {
+        lists = document.getElementsByTagName('li');
+//        console.log(lists.getElementById(this.id));
+        document.getElementById(this.id).parentElement.remove();
+      });
   }
   document.getElementById("Name").value = "";
-
   localStorage.setItem('tasklist', list.innerHTML);
   clear();
 
-}, true);
+});
 
 function clear() {
   localStorage.clear();
 }
 
-function remove(Name) {
-  console.log(document.getElementById(Name));
-  document.getElementById(Name).remove();
-  //Save the string again after we modify it
-  localStorage.setItem('tasklist', list.innerHTML);
+function remove() {
+  console.log(document.getElementById(name));
+  document.getElementById(name).remove();
 }
-
-
-
 
 var saved = localStorage.getItem('tasklist');
 
 if (saved) {
 	list.innerHTML = saved;
 };
+});

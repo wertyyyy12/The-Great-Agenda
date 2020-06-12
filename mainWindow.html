@@ -5,7 +5,7 @@
     <style>
     li{
       margin-top: 20px;
-    } 
+    }
 
     li:first-child {
       margin-top:0;
@@ -18,16 +18,17 @@
     }
     </style>
   </head>
+      <script type="text/javascript" src="js/window.js"></script>
   <body>
 
     <h1>The Agenda</h1>
     <form id="aInfo">
-    Name: <input type="text" id="Name" autofocus>   Date: <input class="date" type="date" id="Date">   Link: <input type="text" id="Link">
+    Name: <input type="text" id="Name" autofocus autocomplete="off">     Date: <input class="date" type="date" id="Date">   Link: <input type="text" id="Link" autocomplete="off">
     <button type="submit" id="Finish">Finish</button>
     <ul id="taskList"></ul>
     </form>
 
-    <script type="text/javascript" src="js/window.js"></script>
+
 
 
 

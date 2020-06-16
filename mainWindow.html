@@ -1,20 +1,84 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <link href='https://fonts.googleapis.com/css?family=Balsamiq Sans' rel='stylesheet'>
     <title>Agenda</title>
     <style>
     li{
       margin-top: 20px;
+      font-size: 20px;
     }
 
     li:first-child {
       margin-top:0;
     }
 
-    div.remove {
-      position: absolute;
-      left: 100px;
-      border: 3px solid #73AD21;
+    .input {
+      /* margin-bottom: 20px; */
+    }
+
+    .link {
+      margin-bottom: 20px;
+      font-size: 10px;
+    }
+
+    #item:hover {
+      background-color: #29d6cb;
+    }
+
+    #item {
+      transition-duration: 0.35s;
+    }
+    body {
+      margin-bottom: 20px;
+      font-size: 15px;
+      font-family: 'Balsamiq Sans';
+      width: 660px;
+    }
+
+    .finish {
+      border-radius: 6px;
+      background-color: #ffffff;
+      border: 2px solid green;
+      color: green;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 20px;
+      margin: 4px 2px;
+      transition-duration: 0.4s;
+      cursor: pointer;
+    }
+
+    a:visited {
+      color: blue;
+    }
+
+    a:link {
+      color: blue;
+    }
+
+    .Remove {
+      border-radius: 6px;
+      background-color: #ffffff;
+      border: 2px solid #FF0000;
+      color: red;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 17px;
+      transition-duration: 0.4s;
+      cursor: pointer;
+    }
+
+    .Remove:hover {
+      background-color: #FF0000;
+      color: white;
+    }
+
+    .finish:hover {
+      background-color: #4CAF50;
+      color: white;
     }
     </style>
   </head>
@@ -23,8 +87,11 @@
 
     <h1>The Agenda</h1>
     <form id="aInfo">
-    Link: <input type="text" id="Link" autocomplete="off">     Name: <input type="text" id="Name" autocomplete="off">     Date: <input class="date" type="date" id="Date">
-    <button type="submit" id="Finish">Finish</button>
+    Link: <input type="text" class="link" id="Link" autocomplete="off">
+    &nbsp; Date: <input  class="input" type="date" id="Date">
+    &nbsp; Name: <input type="text" id="Name" autocomplete="off">
+    <button class="finish" type="submit" id="Finish">Finish</button>
+    <hr>
     <ul id="taskList"></ul>
     </form>
 

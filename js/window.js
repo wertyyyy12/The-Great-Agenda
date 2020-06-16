@@ -56,6 +56,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
   }
 
+function removeMouseOver(e) {
+  e.style.color = 'red';
+}
   document.getElementById("Link").addEventListener("keydown", handleKeys);
 
 
@@ -74,13 +77,16 @@ document.addEventListener("DOMContentLoaded", function(event) {
     //Some slick string manipulation to get the link tag to work correctly
     if (name != '') {
       if (isUrl(link)==false) {
-        list.innerHTML += '<li id=' + name + '>' + name +': ' + dateString + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' + '</li>';
+        list.innerHTML += '<li id=' + name + '>' + '<div class=item id=item>' + name +': ' + dateString + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' + '<div>' + '</li>';
         localStorage.setItem('tasklist', list.innerHTML);
       }
       else {
-      list.innerHTML += '<li id=' + name + '>' + '<a target="_blank" href=' + link + '>' + name + '</a>' +': ' + dateString + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' + '</li>';
+      list.innerHTML += '<li id=' + name + '>' + '<div class=item id=item>' + '<a target="_blank" href=' + link + '>' + name + '</a>' +': ' + dateString + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' + '<div>' + '</li>';
       localStorage.setItem('tasklist', list.innerHTML);
       }
+      document.getElementById("Name").value = "";
+      document.getElementById("Link").value = "";
+      document.getElementById("Link").focus();
     }
     localStorage.setItem('tasklist', list.innerHTML);
     console.log(document.getElementById(name));
@@ -89,12 +95,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
     for (var i = 0; i < numB; i += 1) {
         buttons[i].addEventListener('click', function () {
           lists = document.getElementsByTagName('li');
-          this.parentElement.remove();
+          this.parentElement.parentElement.remove();
           localStorage.setItem('tasklist', list.innerHTML);
         });
     }
-    document.getElementById("Name").value = "";
-    document.getElementById("Name").focus();
+
+
   //localStorage.clear();
 
   });

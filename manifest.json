@@ -4,11 +4,12 @@
   "name": "The Agenda",
   "description": "Quick and easy time management",
   "version": "0.9.0",
-  "icons": { "16": "AgendaUnstable.png",
-             "48": "AgendaUnstable_48.png",
-            "128": "AgendaUnstable_128.png" },
+  "icons": { "16": "Agenda_16.png",
+             "32": "Agenda_32.png",
+             "48": "Agenda_48.png",
+            "128": "Agenda_128.png"},
   "browser_action": {
-    "default_icon": "AgendaUnstable.png",
+    "default_icon": "Agenda_32.png",
     "default_popup": "mainWindow.html"
   },
 

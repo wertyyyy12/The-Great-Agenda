@@ -18,25 +18,25 @@ function isUrl(string) {
 }
 
 var months = {
-  1: "January",
-  2: "February",
-  3: "March",
-  4: "April",
-  5: "May",
-  6: "June",
-  7: "July",
-  8: "August",
-  9: "September",
-  10: "October",
-  11: "November",
-  12: "December"
+  0: "January",
+  1: "February",
+  2: "March",
+  3: "April",
+  4: "May",
+  5: "June",
+  6: "July",
+  7: "August",
+  8: "September",
+  9: "October",
+  10: "November",
+  11: "December"
 };
 
 function changePrettyDate() {
   var prettyDate = document.getElementById("prettyDate");
   var d = new Date(document.getElementById("Date").valueAsDate);
   //Date formatting
-  var month = d.getMonth()+1;
+  var month = d.getMonth();
   var day = d.getDate()+1;
   var year = d.getFullYear();
   var dateString = months[month] + " " + day + " ";
@@ -101,9 +101,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
     var date = document.getElementById("Date").value;
     var d = new Date(document.getElementById("Date").valueAsDate);
     //Date formatting
-    var month = d.getMonth()+1;
+    var month = d.getMonth();
     var day = d.getDate()+1;
     var year = d.getFullYear();
+    var correctD = new Date(Date.UTC(year, month, day+1));
+    console.log(correctD);
     var dateString = months[month] + " " + day + " ";
     var link = document.getElementById("Link").value;
     //Number of days left calculation
@@ -112,12 +114,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
     //Some slick string manipulation to get the link tag to work correctly
     if (name != '') {
       if (isUrl(link)==false) {
-        list.innerHTML += '<li id=' + name + '>' + '<div class=item id=item>' + name +': ' + '<label class=dateStr id=' + String(d).replace(/ /g, 'ok') + '>' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' + '<div>' + '</li>';
+        list.innerHTML += '<li id=' + name + '>' + '<div class=item id=item>' + name +': ' + '<label class=dateStr id=' + String(correctD).replace(/ /g, 'ok') + '>' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' + '<div>' + '</li>';
         localStorage.setItem('tasklist', list.innerHTML);
       }
       else {
       localStorage.setItem('tasklist', list.innerHTML);
-      list.innerHTML += '<li id=' + name + '>' + '<div class=item id=item>' + '<a target="_blank" href=' + link + '>' + name + '</a>' +': ' + '<label class=dateStr id=' + String(d).replace(/ /g, 'ok') + '>' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' + '<div>' + '</li>';
+      list.innerHTML += '<li id=' + name + '>' + '<div class=item id=item>' + '<a target="_blank" href=' + link + '>' + name + '</a>' +': ' + '<label class=dateStr id=' + String(correctD).replace(/ /g, 'ok') + '>' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' + '<div>' + '</li>';
       }
       document.getElementById("Name").value = "";
       document.getElementById("Link").value = "";
@@ -147,6 +149,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
       var originalID = dates[i].id;
       var dateInfo = originalID.replace(/ok/g, ' ');
       var storedDate = new Date(dateInfo);
+      //console.log(storedDate);
       tills[i].innerHTML = dateDiffInDays(today, storedDate);
     }
 

@@ -1,3 +1,0 @@
--If the link field is not a valid url, the assignment name will not have a hyperlink attached to it.
--Added some epic logos! (These were made by Matt Kin)
--Link field autofills on extension opening!! (:O)

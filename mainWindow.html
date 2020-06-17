@@ -5,8 +5,14 @@
     <title>Agenda</title>
     <style>
     li{
-      margin-top: 20px;
+      margin-top: 0px;
       font-size: 20px;
+      transition: all 0.8s ease-out;
+      opacity: 0;
+      height: 2em;
+      opacity: 1;
+      -webkit-transition: opacity 250ms linear;
+      transition: opacity 250ms linear;
     }
 
     li:first-child {
@@ -18,7 +24,7 @@
     }
 
     .link {
-      margin-bottom: 20px;
+      margin-bottom: 10px;
       font-size: 10px;
     }
 
@@ -58,6 +64,10 @@
       color: blue;
     }
 
+    a.help {
+      font-size: 10px;
+      }
+
     .Remove {
       border-radius: 6px;
       background-color: #ffffff;
@@ -80,16 +90,20 @@
       background-color: #4CAF50;
       color: white;
     }
+
+    #LinkLabel {
+      font-size: 10px;
+    }
     </style>
   </head>
       <script type="text/javascript" src="js/window.js"></script>
   <body>
-
+    <a class="help" href="help.html" target="_blank">Help Page</a>
     <h1>The Agenda</h1>
     <form id="aInfo">
-    Link: <input type="text" class="link" id="Link" autocomplete="off">
-    &nbsp; Date: <input  class="input" type="date" id="Date">
-    &nbsp; Name: <input type="text" id="Name" autocomplete="off">
+    Link: <input type="text" class="link" id="Link" autocomplete="off">&nbsp;<img id="FAVICON" alt='' src=''>&nbsp;<label id="LinkLabel">ok</label>
+    <br> Date: <input  class="input" type="date" id="Date">&nbsp;<label for="Date" id="prettyDate"> </label>
+    <br><br> Name: <input type="text" id="Name" autocomplete="off"><br>
     <button class="finish" type="submit" id="Finish">Finish</button>
     <hr>
     <ul id="taskList"></ul>

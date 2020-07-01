@@ -18,27 +18,28 @@ function isUrl(string) {
 }
 
 var months = {
-  0: "January",
-  1: "February",
-  2: "March",
-  3: "April",
-  4: "May",
-  5: "June",
-  6: "July",
-  7: "August",
-  8: "September",
-  9: "October",
-  10: "November",
-  11: "December"
+  1: "January",
+  2: "February",
+  3: "March",
+  4: "April",
+  5: "May",
+  6: "June",
+  7: "July",
+  8: "August",
+  9: "September",
+  10: "October",
+  11: "November",
+  12: "December"
 };
 
 function changePrettyDate() {
   var prettyDate = document.getElementById("prettyDate");
-  var d = new Date(document.getElementById("Date").valueAsDate);
+  var date = document.getElementById("Date").value;
+  var d = new Date(document.getElementById("Date").value);
   //Date formatting
-  var month = d.getMonth();
-  var day = d.getDate()+1;
-  var year = d.getFullYear();
+  var month = parseInt(date.slice(5,7));
+  var day = parseInt(date.slice(8,10));
+  var year = parseInt(date.slice(0,4));
   var dateString = months[month] + " " + day + " ";
   prettyDate.innerHTML = dateString;
 }
@@ -99,11 +100,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
     event.preventDefault();
     var name = document.getElementById("Name").value;
     var date = document.getElementById("Date").value;
-    var d = new Date(document.getElementById("Date").valueAsDate);
     //Date formatting
-    var month = d.getMonth();
-    var day = d.getDate()+1;
-    var year = d.getFullYear();
+    var month = parseInt(date.slice(5,7));
+    var day = parseInt(date.slice(8,10));
+    var year = parseInt(date.slice(0,4));
     var correctD = new Date(Date.UTC(year, month, day+1));
     console.log(correctD);
     var dateString = months[month] + " " + day + " ";

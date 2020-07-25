@@ -1,0 +1,222 @@
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('load');
+  var opt = {
+    type: "basic",
+    title: "Loaded",
+    message: 'Background page loaded.',
+    iconUrl: "chrome-extension://paomcbcgpoikdcjhbanhllhdbemcjokf/Agenda_32.png",
+    buttons: [
+      {
+      title: 'ok boomer'
+      }
+    ]
+  }
+
+  clr('tst');
+  chrome.notifications.create('tst', opt);
+  // chrome.alarms.create('wakeUp', {delayInMinutes: 0.1, periodInMinutes: 0.1});
+  function getNow() {
+    var rightNow = new Date();
+    var now = {
+      'total': rightNow,
+      'year': rightNow.getFullYear(),
+      'month': rightNow.getMonth(),
+      'day': rightNow.getDate(),
+      'hour': rightNow.getHours(),
+      'minute': rightNow.getMinutes(),
+      'second': rightNow.getSeconds(),
+      'ms': rightNow.getMilliseconds()
+    }
+
+    return now;
+  }
+
+  var hours = [7, 8, 9, 11, 13, 15, 17, 19, 21, 23];
+  //Fill an array with generated dates that have the day of today but have the hour of the hours desired to potentially ping someone.
+  var generatedHdates = [];
+  for (i = 0; i < hours.length; i++) {
+    var generatedDate = new Date(getNow().year, getNow().month, getNow().day, hours[i]);
+    generatedHdates.push(generatedDate);
+  }
+
+
+//  Get the next date (time) for a notification
+  function getNextN() {
+    var nextDate = 0;
+    if (getNow().hour < 23) {
+      for (i = generatedHdates.length-1; i >= 0; i = i - 1) {
+        if (compareDates(generatedHdates[i], getNow().total) == 'greater') {
+          nextDate = generatedHdates[i];
+        }
+        else {
+          return nextDate;
+        }
+      }
+    }
+    else {
+      return 'not available';
+    }
+  }
+
+  //Get the nearest notification time that was before the current time
+  function getMissedN() {
+    var missedN = 0;
+    for (i = 0; i < generatedHdates.length; i++) {
+      if (compareDates(generatedHdates[i], getNow().total) == 'less') {
+        missedN = generatedHdates[i];
+      }
+      else {
+        return missedN;
+      }
+    }
+  }
+
+  function checkIfDueSoon() {
+    var items = document.getElementsByClassName("item");
+    var tills = document.getElementsByClassName("daysTill");
+    var len = tills.length;
+    for (var i = 0; i < len; i += 1) {
+      if (tills[i].innerHTML == 1) {
+        var opt = {
+          type: "basic",
+          title: "Task due",
+          message: 'A task is due tomorrow.',
+          iconUrl: "chrome-extension://paomcbcgpoikdcjhbanhllhdbemcjokf/Agenda_32.png",
+          buttons: [
+            {
+            title: 'Mark as done'
+            }
+          ]
+        }
+
+        clr('tst');
+        chrome.notifications.create('tst', opt);
+      }
+    }
+
+    }
+
+function missCheck() {
+  chrome.storage.sync.get(['lastAtime'], function(result) {
+    if (result.lastAtime == getMissedN()) {
+      setAtoNext();
+    }
+
+    else {
+      checkIfDueSoon();
+      setAtoNext();
+    }
+  });
+}
+  missCheck(); //on boot missCheck.
+  chrome.runtime.onSuspend.addListener(function() {
+    //////
+  });
+
+  //a and b are two date objects
+  function DiffofDatesInms(a, b) {
+    //A and B are the dates a and b in ms
+    var A = a.getTime();
+    var B = b.getTime();
+
+    return Math.abs(B - A);
+
+  }
+
+
+  //Given 2 date objects a and b, find whether a is greater than b or less than b
+  //If a > b (a is a later date than b), returns "greater"
+  //Is a < b, returns "less"
+  function compareDates(a, b) {
+    var A = a.getTime();
+    var B = b.getTime();
+
+    if (A < B) {
+      return 'less';
+    }
+    if (A > B) {
+      return 'greater';
+    }
+    if (A == B) {
+      return 'equal';
+    }
+  }
+
+  // console.log(getNextN());
+  function clr(id) {
+    chrome.notifications.clear(id);
+  }
+
+  //set alarm to next available notification time
+  function setAtoNext() {
+    if (getNow().hour < 24) {
+      chrome.alarms.clearAll();
+      var distanceInMs = DiffofDatesInms(getNow().total, getNextN());
+      console.log("Next notif: " + getNextN());
+      console.log("Now: " + getNow().total);
+      var distanceInMin = (distanceInMs / 1000) / 60; //subtract 60 to take into account the initial delay
+      console.log("Set alarm in " + distanceInMin + "m");
+      chrome.alarms.create('ping', {delayInMinutes: distanceInMin, periodInMinutes: 1});
+    }
+  }
+
+  function idealizeDate(date) {
+    hour = date.getHours();
+    var idealizedDate = new Date(getNow().year, getNow().month, getNow().day, hour);
+    return idealizedDate;
+  }
+
+
+  chrome.storage.sync.get(['lastAtime'], function(result) {
+    if (result.lastAtime == getMissedN()) {
+      setAtoNext();
+    }
+
+    else {
+      //check
+    }
+
+  });
+  chrome.alarms.onAlarm.addListener(function(alarm) {
+    //Console logs and a notification when the alarm event is recieved for testing/clarity purposes
+    console.log("beep from " + alarm.name);
+    console.log("Delay set for this alarm was " + alarm.periodInMinutes);
+    var opt = {
+      type: "basic",
+      title: "Alarm",
+      message: 'Alarm recieved',
+      iconUrl: "chrome-extension://paomcbcgpoikdcjhbanhllhdbemcjokf/Agenda_32.png",
+      buttons: [
+        {
+        title: 'Yay!'
+        }
+      ]
+    }
+    clr('ok');
+    chrome.notifications.create('ok', opt);
+    if (alarm.name == "wakeUp") {
+      missCheck();
+      console.log("Wake up alarm.");
+      setAtoNext();
+    }
+    else {
+
+      var sentDate = idealizeDate(getNow().total);
+      chrome.storage.sync.set({'lastAtime': sentDate});
+      console.log("Last sucessful alarm time was set to " + sentDate);
+      checkIfDueSoon();
+      setAtoNext();
+
+    }
+  });
+
+
+
+chrome.notifications.onButtonClicked.addListener(function(notifId, btnIdx) {
+    if (notifId === 'tst') {
+        if (btnIdx === 0) {
+            alert('pressed');
+        }
+    }
+});
+});

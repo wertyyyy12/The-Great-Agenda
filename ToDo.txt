@@ -1,6 +1,3 @@
--Make an "item removed" notification somewhere after item removal
 -Put tasks that have a due date closer to the current date higher on the list
--Add a push notification for assignments due the next day
--Make assignments due the next day larger in size (to be noticed)
--Toggle year display? (ehh save it for way later)
--Show how many DAYS are remaining from due date to today
+-Add a push notification for assignments due the next day (!)
+-Make option to set 1, 2, or no reminders for due dates.

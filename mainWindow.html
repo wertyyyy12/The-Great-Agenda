@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link href='https://fonts.googleapis.com/css?family=Balsamiq Sans' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
     <title>Agenda</title>
     <style>
     li{
@@ -38,7 +38,7 @@
     body {
       margin-bottom: 20px;
       font-size: 15px;
-      font-family: 'Balsamiq Sans';
+      font-family: 'Roboto Mono', monospace;
       width: 660px;
     }
 
@@ -94,24 +94,33 @@
     #LinkLabel {
       font-size: 10px;
     }
+
+    .addend {
+      margin-top: 5px;
+    }
+
+    input {
+      vertical-align: baseline;
+    }
     </style>
+    <script type="text/javascript" src="js/window.js"></script>
+    <script type="text/javascript" src="background.js"></script>
+
   </head>
-      <script type="text/javascript" src="js/window.js"></script>
   <body>
     <a class="help" href="help.html" target="_blank">Help Page</a>
     <h1>The Agenda</h1>
     <form id="aInfo">
-    Link: <input type="text" class="link" id="Link" autocomplete="off">&nbsp;<img id="FAVICON" alt='' src=''>&nbsp;<label id="LinkLabel">ok</label>
-    <br> Date: <input  class="input" type="date" id="Date">&nbsp;<label for="Date" id="prettyDate"> </label>
-    <br><br> Name: <input type="text" id="Name" autocomplete="off"><br>
+    Link: <input type="text" class="link" id="Link" autocomplete="off">&nbsp;
+    <div class="addend"><img  id="FAVICON" alt='' src=''>&nbsp;<label id="LinkLabel">ok</label></div>
+    <br> Date: <input  class="input" type="date" id="Date">
+    <div class="addend"><label for="Date" id="prettyDate"> </label></div>
+    <br><br> Name: <input type="text" id="Name" autocomplete="off"><br><br>
     <button class="finish" type="submit" id="Finish">Finish</button>
+    <button class="test" id="notif">Make Notification</button>
     <hr>
     <ul id="taskList"></ul>
     </form>
-
-
-
-
 
 
   </body>

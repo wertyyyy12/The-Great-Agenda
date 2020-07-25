@@ -1,4 +1,4 @@
-window.onload=function(){
+window.onload=function() {
   document.getElementById("Finish").click();
   document.getElementById("Link").focus();
   chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
@@ -6,6 +6,22 @@ window.onload=function(){
     document.getElementById("Link").value = url;
   });
 };
+
+//Get month, day, and year given a date in input form (ex: 2005-9-12)
+//Acess with .month, .day, and .year properties of returned object
+function getMDY(d) {
+  var month = parseInt(d.slice(5,7));
+  var day = parseInt(d.slice(8,10));
+  var year = parseInt(d.slice(0,4));
+
+  var finaldate = {
+    'month': month,
+    'day': day,
+    'year': year
+  }
+
+  return finaldate;
+}
 
 function isUrl(string) {
   try {
@@ -36,11 +52,8 @@ function changePrettyDate() {
   var prettyDate = document.getElementById("prettyDate");
   var date = document.getElementById("Date").value;
   var d = new Date(document.getElementById("Date").value);
-  //Date formatting
-  var month = parseInt(date.slice(5,7));
-  var day = parseInt(date.slice(8,10));
-  var year = parseInt(date.slice(0,4));
-  var dateString = months[month] + " " + day + " ";
+  date = getMDY(date);
+  var dateString = months[date.month] + " " + date.day + " ";
   prettyDate.innerHTML = dateString;
 }
 
@@ -66,6 +79,9 @@ function dateDiffInDays(a, b) {
 document.addEventListener("DOMContentLoaded", function(event) {
   changeTitle();
   document.getElementById("Date").valueAsDate = new Date();
+  date = getMDY(document.getElementById("Date").value);
+  tmrw = new Date(date.year, date.month-1, date.day+1);
+  document.getElementById("Date").valueAsDate = tmrw;
   var form = document.getElementById("aInfo");
   var list = document.getElementById("taskList");
   changePrettyDate();
@@ -96,6 +112,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
   });
 
+  function clr() {
+    chrome.notifications.clear('tst');
+  }
+
   form.addEventListener('submit', function (event) {
     event.preventDefault();
     var name = document.getElementById("Name").value;
@@ -104,8 +124,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     var month = parseInt(date.slice(5,7));
     var day = parseInt(date.slice(8,10));
     var year = parseInt(date.slice(0,4));
-    var correctD = new Date(Date.UTC(year, month, day+1));
-    console.log(correctD);
+    var correctD = new Date(Date.UTC(year, month-1, day+1));
     var dateString = months[month] + " " + day + " ";
     var link = document.getElementById("Link").value;
     //Number of days left calculation
@@ -113,19 +132,22 @@ document.addEventListener("DOMContentLoaded", function(event) {
     //Remove button formatting
     //Some slick string manipulation to get the link tag to work correctly
     if (name != '') {
-      if (isUrl(link)==false) {
-        list.innerHTML += '<li id=' + name + '>' + '<div class=item id=item>' + name +': ' + '<label class=dateStr id=' + String(correctD).replace(/ /g, 'ok') + '>' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' + '<div>' + '</li>';
-        localStorage.setItem('tasklist', list.innerHTML);
+      if (isUrl(link)==false) {                                                                                         //inject date into id lol. ids cant have spaces so we replace the spaces with "ok", then we replace the oks with spaces again when we want to decode.
+        list.innerHTML += '<li id=' + name + '>' + '<div class=item id=item>' + name +': ' + '<label class=dateStr id=' + String(correctD).replace(/ /g, 'ok') + '>' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' + '<div>' + '</li>';
+        chrome.storage.sync.set({'tasklist': list.innerHTML});
+        // localStorage.setItem('tasklist', list.innerHTML);
       }
       else {
-      localStorage.setItem('tasklist', list.innerHTML);
-      list.innerHTML += '<li id=' + name + '>' + '<div class=item id=item>' + '<a target="_blank" href=' + link + '>' + name + '</a>' +': ' + '<label class=dateStr id=' + String(correctD).replace(/ /g, 'ok') + '>' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' + '<div>' + '</li>';
+      // localStorage.setItem('tasklist', list.innerHTML);
+      chrome.storage.sync.set({'tasklist': list.innerHTML});
+      list.innerHTML += '<li id=' + name + '>' + '<div class=item id=item>' + '<a target="_blank" href=' + link + '>' + name + '</a>' +': ' + '<label class=dateStr id=' + String(correctD).replace(/ /g, 'ok') + '>' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' + '<div>' + '</li>';
       }
       document.getElementById("Name").value = "";
       document.getElementById("Link").value = "";
       document.getElementById("Link").focus();
     }
-    localStorage.setItem('tasklist', list.innerHTML);
+    // localStorage.setItem('tasklist', list.innerHTML);
+    chrome.storage.sync.set({'tasklist': list.innerHTML});
     buttons = document.getElementsByClassName('Remove');
     numB = buttons.length;
     for (var i = 0; i < numB; i += 1) {
@@ -134,13 +156,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
           //target is the li element
           var target = this.parentElement.parentElement;
           target.style.opacity = '0';
-          setTimeout(function(){target.remove(); localStorage.setItem('tasklist', list.innerHTML);}, 250);
+          setTimeout(function(){target.remove(); chrome.storage.sync.set({'tasklist': list.innerHTML});}, 250);
 //          this.parentElement.parentElement.remove();
           //localStorage.setItem('tasklist', list.innerHTML);
         });
     }
 
     tills = document.getElementsByClassName("daysTill");
+    items = document.getElementsByClassName("item");
     dates = document.getElementsByClassName("dateStr");
     len = tills.length;
 
@@ -149,18 +172,55 @@ document.addEventListener("DOMContentLoaded", function(event) {
       var originalID = dates[i].id;
       var dateInfo = originalID.replace(/ok/g, ' ');
       var storedDate = new Date(dateInfo);
-      //console.log(storedDate);
-      tills[i].innerHTML = dateDiffInDays(today, storedDate);
+      remainingDays = dateDiffInDays(today, storedDate);
+      tills[i].innerHTML = remainingDays;
+      tills[i].id = remainingDays;
+      if (remainingDays == 1) {
+        tills[i].style.color = "red";
+      }
+
+      else if (remainingDays == 0) {
+        items[i].style.color = "DarkRed";
+        items[i].style.fontWeight = 900;
+        tills[i].innerHTML = 'TODAY';
+        tills[i].style.color = "red";
+      }
+
+      else if (remainingDays < 0) {
+        items[i].style.color = "red";
+        items[i].style.fontWeight = 900;
+        tills[i].innerHTML = 'OVERDUE';
+        tills[i].style.color = "red";
+      }
+
     }
 
+    var nBtn = document.getElementById('notif');
+    nBtn.addEventListener('click', function() {
+      var opt = {
+        type: "basic",
+        title: "Test Notification",
+        message: "Notification works!",
+        iconUrl: "chrome-extension://paomcbcgpoikdcjhbanhllhdbemcjokf/Agenda_32.png",
+        buttons: [
+          {
+          title: 'huh?'
+          }
+        ]
+      }
+      clr();
+      chrome.notifications.create('tst', opt);
+    });
 
-
-  //localStorage.clear();
 
   });
 
-  var saved = localStorage.getItem('tasklist');
-  if (saved) {
-  	list.innerHTML = saved;
-  };
+  chrome.storage.sync.get(['tasklist'], function(saved) {
+//    alert(saved.tasklist);
+
+    if (saved.tasklist) {
+  	list.innerHTML = saved.tasklist;
+    }
+
+  });
 });

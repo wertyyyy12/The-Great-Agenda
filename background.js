@@ -13,8 +13,7 @@ chrome.storage.sync.get(['tasklist'], function(saved) {
   var html = saved.tasklist;
   var div = document.createElement("div");
   div.innerHTML = html;
-  console.log(div.innerHTML);
-function checkIfDueSoon() {
+  function checkIfDueSoon() {
   var tills = div.getElementsByClassName("daysTill");
   var items = div.getElementsByClassName("item");
   var dates = div.getElementsByClassName("dateStr");
@@ -87,18 +86,10 @@ function checkIfDueSoon() {
     }
   }
 }
-document.addEventListener('DOMContentLoaded', () => {
-  console.log('load');
-  chrome.alarms.getAll(function(array) {
-    console.log("ALARMS: ");
-    console.log(array);
-  });
-  //This function checks if there are any assignments due soon. Decodes the date stored in the id of the list html elements.
+  checkIfDueSoon();
 
 
 
-});
-checkIfDueSoon();
 chrome.alarms.onAlarm.addListener(function() {
   console.log("beep");
   var yaay = {
@@ -117,7 +108,10 @@ chrome.alarms.onAlarm.addListener(function() {
   checkIfDueSoon();
 });
 
+checkIfDueSoon();
+
 chrome.runtime.onInstalled.addListener(function() {
+  console.log("inst");
   chrome.alarms.clearAll();
   chrome.alarms.create('ping', {periodInMinutes: 180});
 
@@ -128,13 +122,29 @@ chrome.notifications.onButtonClicked.addListener(function(notifId, btnIdx) {
     var htmlCopy = html;
     var doc = new DOMParser().parseFromString(html, "text/html");
     var target = doc.getElementById(notifId).outerHTML;
+    var win = window.open('mainWindow.html');
+
+    // chrome.tabs.create({
+    //   active: true,
+    //   url:  'mainWindow.html'
+    // }, null);
     var removedTargetHtml = htmlCopy.replace(target, "");
     console.log(removedTargetHtml);
     chrome.storage.sync.set({'tasklist': removedTargetHtml});
+    win.close();
       //setTimeout(function(){target.remove(); chrome.storage.sync.set({'tasklist': list.innerHTML});}, 250);
 });
 
 
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('load');
+  chrome.alarms.getAll(function(array) {
+    console.log("ALARMS: ");
+    console.log(array);
+  });
+  //This function checks if there are any assignments due soon. Decodes the date stored in the id of the list html elements.
 });
 
 

@@ -86,9 +86,6 @@ chrome.storage.sync.get(['tasklist'], function(saved) {
     }
   }
 }
-  checkIfDueSoon();
-
-
 
 chrome.alarms.onAlarm.addListener(function() {
   console.log("beep");
@@ -108,7 +105,10 @@ chrome.alarms.onAlarm.addListener(function() {
   checkIfDueSoon();
 });
 
-checkIfDueSoon();
+
+
+
+});
 
 chrome.runtime.onInstalled.addListener(function() {
   console.log("inst");
@@ -135,11 +135,9 @@ chrome.notifications.onButtonClicked.addListener(function(notifId, btnIdx) {
       //setTimeout(function(){target.remove(); chrome.storage.sync.set({'tasklist': list.innerHTML});}, 250);
 });
 
-
-});
-
 document.addEventListener('DOMContentLoaded', () => {
   console.log('load');
+
   chrome.alarms.getAll(function(array) {
     console.log("ALARMS: ");
     console.log(array);

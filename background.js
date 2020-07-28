@@ -1,8 +1,106 @@
-chrome.storage.sync.get(['tasklist'], function(saved) {
-  function clr(id) {
-    chrome.notifications.clear(id);
+var hours = [7, 8, 9, 11, 13, 15, 17, 19, 21, 23];
+//Fill an array with generated dates that have the day of today but have the hour of the hours desired to potentially ping someone.
+var generatedHdates = [];
+for (i = 0; i < hours.length; i++) {
+  var generatedDate = new Date(getNow().year, getNow().month, getNow().day, hours[i]);
+  generatedHdates.push(generatedDate);
+}
+
+function clr(id) {
+  chrome.notifications.clear(id);
+}
+function getNow() {
+  var rightNow = new Date();
+  var now = {
+    'total': rightNow,
+    'year': rightNow.getFullYear(),
+    'month': rightNow.getMonth(),
+    'day': rightNow.getDate(),
+    'hour': rightNow.getHours(),
+    'minute': rightNow.getMinutes(),
+    'second': rightNow.getSeconds(),
+    'ms': rightNow.getMilliseconds()
   }
-  var msPerDay = 1000 * 60 * 60 * 24;
+
+  return now;
+}
+function DiffofDatesInms(a, b) {
+  //A and B are the dates a and b in ms
+  var A = a.getTime();
+  var B = b.getTime();
+
+  return Math.abs(B - A);
+
+}
+function compareDates(a, b) {
+  var A = a.getTime();
+  var B = b.getTime();
+
+  if (A < B) {
+    return 'less';
+  }
+  if (A > B) {
+    return 'greater';
+  }
+  if (A == B) {
+    return 'equal';
+  }
+}
+function getNextN() {
+  var nextDate = 0;
+  if (getNow().hour < 24) {
+    for (i = generatedHdates.length-1; i >= 0; i = i - 1) {
+      if (compareDates(generatedHdates[i], getNow().total) == 'greater') {
+        nextDate = generatedHdates[i];
+      }
+      else {
+        return nextDate;
+      }
+    }
+  }
+  else {
+    return generatedHdates[0].setDate(generatedHdates[0].getDate() + 1);
+    console.log("Setting to tmrw morning.");
+  }
+}
+function setAtoNext() {
+  if (getNow().hour < 24) {
+    chrome.alarms.clearAll();
+
+    console.log("Now: " + getNow().total + "(epoch: " + Date.now() + ")");
+    console.log("Next notification: " + getNextN());
+
+    try {
+     var finalDate = getNextN().getTime();
+    }
+    catch {
+      console.log("Next notification set to morning.");
+      var morningCopy = generatedHdates[0]
+      var finalDate = morningCopy.setDate(getNow().total.getDate() + 1);
+      console.log("Morning notification, setting to: " + finalDate);
+    }
+     console.log('Timestamp set: ' + finalDate);
+     chrome.alarms.create('ping', {when: finalDate});
+  }
+}
+function retrieveSave() {
+  var save = {
+    "tasklist": "",
+    "lastAtime": ""
+  }
+
+  chrome.storage.sync.get(['tasklist'], function(saved) {
+    save.tasklist = saved.tasklist;
+  });
+
+  chrome.storage.sync.get(['lastAtime'], function(saved) {
+    save.lastAtime = saved.lastAtime;
+  });
+
+  return save;
+}
+setAtoNext();
+function checkIfDueSoon() {
   function dateDiffInDays(a, b) {
     // Discard the time and time-zone information.
     const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
@@ -10,10 +108,10 @@ chrome.storage.sync.get(['tasklist'], function(saved) {
 
     return Math.floor((utc2 - utc1) / msPerDay);
   }
-  var html = saved.tasklist;
+  var html = retrieveSave().tasklist;
   var div = document.createElement("div");
   div.innerHTML = html;
-  function checkIfDueSoon() {
+  var msPerDay = 1000 * 60 * 60 * 24;
   var tills = div.getElementsByClassName("daysTill");
   var items = div.getElementsByClassName("item");
   var dates = div.getElementsByClassName("dateStr");
@@ -86,34 +184,46 @@ chrome.storage.sync.get(['tasklist'], function(saved) {
     }
   }
 }
+checkIfDueSoon();
+chrome.storage.sync.get(['tasklist'], function(saved) {
 
-chrome.alarms.onAlarm.addListener(function() {
-  console.log("beep");
-  var yaay = {
-    type: "basic",
-    title: "yes",
-    message: 'we did it',
-    iconUrl: "chrome-extension://paomcbcgpoikdcjhbanhllhdbemcjokf/Agenda_32.png",
-    buttons: [
-      {
-      title: 'yyyyy!'
-      }
-    ]
-  };
-  chrome.notifications.clear('gt');
-  chrome.notifications.create('gt', yaay);
-  checkIfDueSoon();
+  chrome.storage.sync.get(['lastAtime'], function(saved) {
+    //7200000 = 2 hours in ms
+    if (DiffofDatesInms(getNow().total, saved.lastAtime) > 7200000) {
+      console.log("MISSED!");
+      checkIfDueSoon();
+    }
+  });
+  chrome.alarms.onAlarm.addListener(function(alarm) {
+    console.log("Beep from " + alarm.name);
+    var yaay = {
+      type: "basic",
+      title: "Alarm",
+      message: 'Alarm recieved',
+      iconUrl: "chrome-extension://paomcbcgpoikdcjhbanhllhdbemcjokf/Agenda_32.png",
+      buttons: [
+        {
+        title: 'yyyyy!'
+        }
+      ]
+    };
+    clr('yay');
+    chrome.notifications.create('yay', yaay);
+    //Set last sucessful alarm time to right now.
+    chrome.storage.sync.set({"lastAtime": new Date()});
+    checkIfDueSoon();
+    setAtoNext();
+  });
+
 });
 
 
 
-
-});
 
 chrome.runtime.onInstalled.addListener(function() {
   console.log("inst");
   chrome.alarms.clearAll();
-  chrome.alarms.create('ping', {periodInMinutes: 180});
+  chrome.alarms.create('wakeUp', {delayInMinutes: 1});
 
 });
 
@@ -136,8 +246,6 @@ chrome.notifications.onButtonClicked.addListener(function(notifId, btnIdx) {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('load');
-
   chrome.alarms.getAll(function(array) {
     console.log("ALARMS: ");
     console.log(array);

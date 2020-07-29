@@ -20,5 +20,5 @@
   },
 
 
-  "permissions": ["activeTab", "tabs", "notifications", "alarms", "storage", "webNavigation"]
+  "permissions": ["activeTab", "tabs", "notifications", "alarms", "storage"]
 }

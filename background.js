@@ -84,7 +84,7 @@ function setAtoNext() {
   }
 }
 setAtoNext(); //on boot set A
-
+var html = 0;
 chrome.runtime.onInstalled.addListener(function() {
   chrome.storage.sync.set({"lastAtime": getNow().total.toString()});
   var inst = {
@@ -103,16 +103,7 @@ chrome.runtime.onInstalled.addListener(function() {
 });
 
 //7200000 = 2 hours in ms
-chrome.storage.sync.get(["lastAtime"], function(lastA) {
-  console.log("Last alarm was " + DiffofDatesInms(getNow().total, new Date(lastA.lastAtime)) / 1000 + " seconds ago.");
-  console.log("Last alarm was " + DiffofDatesInms(getNow().total, new Date(lastA.lastAtime)) / 60000 + " minutes ago.");
-  console.log("Last alarm was " + DiffofDatesInms(getNow().total, new Date(lastA.lastAtime)) / 3600000 + " hours ago.");
-  if (DiffofDatesInms(getNow().total, new Date(lastA.lastAtime)) > 7200000) {
-    console.log("MISSED!");
-    checkIfDueSoon();
-  }
 
-});
 
 chrome.storage.sync.get(["tasklist"], function(tList) {
   function checkIfDueSoon() {
@@ -124,6 +115,7 @@ chrome.storage.sync.get(["tasklist"], function(tList) {
       return Math.floor((utc2 - utc1) / msPerDay);
     }
     var html = tList.tasklist;
+    console.log(tList.tasklist);
     var div = document.createElement("div");
     div.innerHTML = html;
     var msPerDay = 1000 * 60 * 60 * 24;
@@ -140,6 +132,7 @@ chrome.storage.sync.get(["tasklist"], function(tList) {
       var storedDate = new Date(dateInfo);
       var remainingDays = dateDiffInDays(today, storedDate);
       var nameOfAssign = items[i].parentElement.id;
+      console.log(nameOfAssign);
       if (remainingDays <= 1) {
         sendNotfication = true;
       }
@@ -199,7 +192,14 @@ chrome.storage.sync.get(["tasklist"], function(tList) {
       }
     }
   }
+  chrome.storage.sync.get(["lastAtime"], function(lastA) {
+    console.log("Last alarm was " + DiffofDatesInms(getNow().total, new Date(lastA.lastAtime)) / 60000 + " minutes ago.");
+    if (DiffofDatesInms(getNow().total, new Date(lastA.lastAtime)) > 7200000) {
+      console.log("MISSED!");
+      checkIfDueSoon();
+    }
 
+  });
   chrome.alarms.onAlarm.addListener(function(alarm) {
     console.log("Beep from " + alarm.name);
     var yaay = {

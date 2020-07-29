@@ -202,19 +202,6 @@ chrome.storage.sync.get(["tasklist"], function(tList) {
   });
   chrome.alarms.onAlarm.addListener(function(alarm) {
     console.log("Beep from " + alarm.name);
-    var yaay = {
-      type: "basic",
-      title: "Alarm",
-      message: 'Alarm recieved',
-      iconUrl: "chrome-extension://paomcbcgpoikdcjhbanhllhdbemcjokf/Agenda_32.png",
-      buttons: [
-        {
-        title: 'yyyyy!'
-        }
-      ]
-    };
-    clr('yay');
-    chrome.notifications.create('yay', yaay);
     //Set last sucessful alarm time to right now.
     chrome.storage.sync.set({"lastAtime": getNow().total.toString()});
     checkIfDueSoon();
@@ -222,11 +209,6 @@ chrome.storage.sync.get(["tasklist"], function(tList) {
   });
 
 });
-
-
-
-
-
 
 
 chrome.notifications.onButtonClicked.addListener(function(notifId, btnIdx) {

@@ -84,148 +84,163 @@ function setAtoNext() {
   }
 }
 setAtoNext(); //on boot set A
-var html = 0;
+var html = localStorage.getItem("tasklist");
 chrome.runtime.onInstalled.addListener(function() {
-  chrome.storage.sync.set({"lastAtime": getNow().total.toString()});
-  var inst = {
-    type: "basic",
-    title: "Installed",
-    message: 'Extension install',
-    iconUrl: "chrome-extension://paomcbcgpoikdcjhbanhllhdbemcjokf/Agenda_32.png",
-    buttons: [
-      {
-      title: 'OK'
-      }
-    ]
-  };
-  clr('install');
-  chrome.notifications.create('install', inst);
+  localStorage.setItem("lastAtime", getNow().total.toString())
+  // chrome.storage.sync.set({"lastAtime": getNow().total.toString()});
+  // var inst = {
+  //   type: "basic",
+  //   title: "Installed",
+  //   message: 'Extension install',
+  //   iconUrl: "chrome-extension://paomcbcgpoikdcjhbanhllhdbemcjokf/Agenda_32.png",
+  //   buttons: [
+  //     {
+  //     title: 'OK'
+  //     }
+  //   ]
+  // };
+  // clr('install');
+  // chrome.notifications.create('install', inst);
 });
 
 //7200000 = 2 hours in ms
 
 
-chrome.storage.sync.get(["tasklist"], function(tList) {
-  function checkIfDueSoon() {
-    function dateDiffInDays(a, b) {
-      // Discard the time and time-zone information.
-      const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
-      const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+function checkIfDueSoon() {
+  function dateDiffInDays(a, b) {
+    // Discard the time and time-zone information.
+    const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+    const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
 
-      return Math.floor((utc2 - utc1) / msPerDay);
+    return Math.floor((utc2 - utc1) / msPerDay);
+  }
+  var html = localStorage.getItem("tasklist");
+  console.log(html);
+  var div = document.createElement("div");
+  div.innerHTML = html;
+  var msPerDay = 1000 * 60 * 60 * 24;
+  var tills = div.getElementsByClassName("daysTill");
+  var items = div.getElementsByClassName("item");
+  var dates = div.getElementsByClassName("dateStr");
+  var len = tills.length;
+  console.log(len);
+  var sendNotfication;
+  for (var i = 0; i < len; i += 1) {
+    var today = new Date();
+    var originalID = dates[i].id;
+    var dateInfo = originalID.replace(/ok/g, ' ');
+    var storedDate = new Date(dateInfo);
+    var remainingDays = dateDiffInDays(today, storedDate);
+    var nameOfAssign = items[i].parentElement.id;
+    console.log(nameOfAssign);
+    if (remainingDays <= 1) {
+      sendNotfication = true;
     }
-    var html = tList.tasklist;
-    console.log(tList.tasklist);
-    var div = document.createElement("div");
-    div.innerHTML = html;
-    var msPerDay = 1000 * 60 * 60 * 24;
-    var tills = div.getElementsByClassName("daysTill");
-    var items = div.getElementsByClassName("item");
-    var dates = div.getElementsByClassName("dateStr");
-    var len = tills.length;
-    console.log(len);
-    var sendNotfication;
-    for (var i = 0; i < len; i += 1) {
-      var today = new Date();
-      var originalID = dates[i].id;
-      var dateInfo = originalID.replace(/ok/g, ' ');
-      var storedDate = new Date(dateInfo);
-      var remainingDays = dateDiffInDays(today, storedDate);
-      var nameOfAssign = items[i].parentElement.id;
-      console.log(nameOfAssign);
-      if (remainingDays <= 1) {
-        sendNotfication = true;
-      }
-      else {
-        sendNotfication = false;
-      }
+    else {
+      sendNotfication = false;
+    }
 
-      if (remainingDays == 1) {
-        var message = nameOfAssign + " is due tomorrow."
-        var dueSoonopt = {
-          type: "basic",
-          title: "Assignment due",
-          message: message,
-          iconUrl: "chrome-extension://paomcbcgpoikdcjhbanhllhdbemcjokf/Agenda_32.png",
-          buttons: [
-            {
-            title: 'Mark as done'
-            }
-          ]
-        }
+    if (remainingDays == 1) {
+      var message = nameOfAssign + " is due tomorrow."
+      var dueSoonopt = {
+        type: "basic",
+        title: "Assignment due",
+        message: message,
+        iconUrl: "chrome-extension://paomcbcgpoikdcjhbanhllhdbemcjokf/Agenda_32.png",
+        buttons: [
+          {
+          title: 'Mark as done'
+          }
+        ]
       }
+    }
 
-      if (remainingDays == 0) {
-        var message = nameOfAssign + " is due today."
-        var dueSoonopt = {
-          type: "basic",
-          title: "Assignment due today",
-          message: message,
-          iconUrl: "chrome-extension://paomcbcgpoikdcjhbanhllhdbemcjokf/Agenda_32.png",
-          buttons: [
-            {
-            title: 'Mark as done'
-            }
-          ]
-        }
+    if (remainingDays == 0) {
+      var message = nameOfAssign + " is due today."
+      var dueSoonopt = {
+        type: "basic",
+        title: "Assignment due today",
+        message: message,
+        iconUrl: "chrome-extension://paomcbcgpoikdcjhbanhllhdbemcjokf/Agenda_32.png",
+        buttons: [
+          {
+          title: 'Mark as done'
+          }
+        ]
       }
+    }
 
-      if (remainingDays < 0) {
-        var message = nameOfAssign + " is overdue!"
-        var dueSoonopt = {
-          type: "basic",
-          title: "Assignment overdue",
-          message: message,
-          iconUrl: "chrome-extension://paomcbcgpoikdcjhbanhllhdbemcjokf/Agenda_32.png",
-          buttons: [
-            {
-            title: 'Mark as done'
-            }
-          ]
-        }
+    if (remainingDays < 0) {
+      var message = nameOfAssign + " is overdue!"
+      var dueSoonopt = {
+        type: "basic",
+        title: "Assignment overdue",
+        message: message,
+        iconUrl: "chrome-extension://paomcbcgpoikdcjhbanhllhdbemcjokf/Agenda_32.png",
+        buttons: [
+          {
+          title: 'Mark as done'
+          }
+        ]
       }
+    }
 
-      if (sendNotfication) {
-        clr(nameOfAssign);
-        chrome.notifications.create(nameOfAssign, dueSoonopt);
-        sendNotfication = false;
-      }
+    if (sendNotfication) {
+      clr(nameOfAssign);
+      chrome.notifications.create(nameOfAssign, dueSoonopt);
+      sendNotfication = false;
     }
   }
-  chrome.storage.sync.get(["lastAtime"], function(lastA) {
-    console.log("Last alarm was " + DiffofDatesInms(getNow().total, new Date(lastA.lastAtime)) / 60000 + " minutes ago.");
-    if (DiffofDatesInms(getNow().total, new Date(lastA.lastAtime)) > 7200000) {
-      console.log("MISSED!");
-      checkIfDueSoon();
-    }
+}
+  checkIfDueSoon();
+  var lastA = localStorage.getItem("lastAtime");
+  console.log("Last alarm was " + DiffofDatesInms(getNow().total, new Date(lastA)) / 60000 + " minutes ago.");
+  if (DiffofDatesInms(getNow().total, new Date(lastA)) > 7200000) {
+    console.log("MISSED!");
+    checkIfDueSoon();
+  }
 
-  });
   chrome.alarms.onAlarm.addListener(function(alarm) {
     console.log("Beep from " + alarm.name);
     //Set last sucessful alarm time to right now.
-    chrome.storage.sync.set({"lastAtime": getNow().total.toString()});
+    // chrome.storage.sync.set({"lastAtime": getNow().total.toString()});
+    localStorage.setItem("lastAtime", getNow().total.toString());
     checkIfDueSoon();
     setAtoNext();
   });
 
-});
-
 
 chrome.notifications.onButtonClicked.addListener(function(notifId, btnIdx) {
     var htmlCopy = html;
-    var doc = new DOMParser().parseFromString(html, "text/html");
-    var target = doc.getElementById(notifId).outerHTML;
-    var win = window.open('mainWindow.html');
+    console.log(htmlCopy);
+    var doc = new DOMParser().parseFromString(htmlCopy, "text/html");
+    doc.innerHTML = htmlCopy;
+    console.log(doc);
+    console.log(notifId);
+    //
+    // var win = window.open('mainWindow.html');
 
     // chrome.tabs.create({
     //   active: true,
     //   url:  'mainWindow.html'
     // }, null);
-    var removedTargetHtml = htmlCopy.replace(target, "");
-    console.log(removedTargetHtml);
-    chrome.storage.sync.set({'tasklist': removedTargetHtml});
-    win.close();
-      //setTimeout(function(){target.remove(); chrome.storage.sync.set({'tasklist': list.innerHTML});}, 250);
+    var targets = Array.prototype.slice.call(doc.getElementsByTagName("li"));
+    var finalTarget = 0;
+    targets.forEach((item) => {
+      if (item.id == notifId) {
+        finalTarget = item;
+      }
+    });
+
+    console.log(finalTarget.outerHTML);
+
+    // var removedTargetHtml = htmlCopy.replace(target, "");
+    // console.log(removedTargetHtml);
+    // localStorage.setItem("tasklist", removedTargetHtml);
+
+    // chrome.storage.sync.set({'tasklist': removedTargetHtml});
+    // win.close();
+    //setTimeout(function(){target.remove(); chrome.storage.sync.set({'tasklist': list.innerHTML});}, 250);
 });
 
 document.addEventListener('DOMContentLoaded', () => {

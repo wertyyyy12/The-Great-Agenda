@@ -77,7 +77,6 @@ function dateDiffInDays(a, b) {
 }
 
 document.addEventListener("DOMContentLoaded", function(event) {
-  console.log('loaded');
   changeTitle();
   document.getElementById("Date").valueAsDate = new Date();
   date = getMDY(document.getElementById("Date").value);
@@ -132,7 +131,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     //Some slick string manipulation to get the link tag to work correctly
     if (name != '') {                                                                                                   //EDIT: turns out ids CAN have spaces, u just have to put quotes around the id. Well guess what too bad I am so not going to go through the entire thing just to not okokokokokokok
       if (isUrl(link)==false) {                                                                                         //inject date into id lol. ids cant have spaces so we replace the spaces with "ok", then we replace the oks with spaces again when we want to decode.
-        list.innerHTML += '<li id=' + name + '>' + '<div class=item id=item nm=' + '"' + name + '">' + name +': ' + '<label class=dateStr id=' + String(correctD).replace(/ /g, 'ok') + '>' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' + '<div>' + '</li>';
+        list.innerHTML += '<li id=' + '"' + name + '">' + '<div class=item id=item nm=' + '"' + name + '">' + name +': ' + '<label class=dateStr id=' + String(correctD).replace(/ /g, 'ok') + '>' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' + '<div>' + '</li>';
         // chrome.storage.local.set({'tasklist': list.innerHTML});
         // localStorage.setItem('tasklist', list.innerHTML);
       }
@@ -150,9 +149,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     // chrome.storage.local.set({'tasklist': list.innerHTML});
     buttons = document.getElementsByClassName('Remove');
     numB = buttons.length;
-    console.log('about to add listeners');
     for (var i = 0; i < numB; i += 1) {
-        console.log('adding button listener');
         buttons[i].addEventListener('click', function () {
           lists = document.getElementsByTagName('li');
           //target is the li element
@@ -163,14 +160,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
           //localStorage.setItem('tasklist', list.innerHTML);
         });
     }
-    console.log('button loop done');
     tills = document.getElementsByClassName("daysTill");
     items = document.getElementsByClassName("item");
     dates = document.getElementsByClassName("dateStr");
     len = tills.length;
 
     for (var i = 0; i < len; i += 1) {
-      console.log("loop?");
       var today = new Date();
       var originalID = dates[i].id;
       var dateInfo = originalID.replace(/ok/g, ' ');

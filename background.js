@@ -211,7 +211,7 @@ function checkIfDueSoon() {
 
 
 chrome.notifications.onButtonClicked.addListener(function(notifId, btnIdx) {
-    var htmlCopy = html;
+    var htmlCopy = localStorage.getItem("tasklist");
     console.log(htmlCopy);
     var doc = new DOMParser().parseFromString(htmlCopy, "text/html");
     doc.innerHTML = htmlCopy;
@@ -220,23 +220,30 @@ chrome.notifications.onButtonClicked.addListener(function(notifId, btnIdx) {
     //
     // var win = window.open('mainWindow.html');
 
-    // chrome.tabs.create({
-    //   active: true,
-    //   url:  'mainWindow.html'
-    // }, null);
     var targets = Array.prototype.slice.call(doc.getElementsByTagName("li"));
+    console.log(targets);
+    var finalindex = 0;
     var finalTarget = 0;
-    targets.forEach((item) => {
-      if (item.id == notifId) {
-        finalTarget = item;
+    targets.forEach((item, index) => {
+      console.log(item.id);
+      console.log(notifId);
+      if (item.id.trim() == notifId.trim()) {
+        console.log("match found.")
+        console.log(targets[index]);
+        finalTarget = targets[index].outerHTML;
       }
     });
 
-    console.log(finalTarget.outerHTML);
+    console.log(finalTarget);
 
-    // var removedTargetHtml = htmlCopy.replace(target, "");
-    // console.log(removedTargetHtml);
-    // localStorage.setItem("tasklist", removedTargetHtml);
+     var removedTargetHtml = htmlCopy.replace(finalTarget, "");
+     console.log(removedTargetHtml);
+     localStorage.setItem("tasklist", removedTargetHtml);
+     window.location.href="mainWindow.html";
+     // chrome.tabs.create({
+     //   active: true,
+     //   url:  'mainWindow.html'
+     // }, null);
 
     // chrome.storage.sync.set({'tasklist': removedTargetHtml});
     // win.close();

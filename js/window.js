@@ -206,4 +206,5 @@ document.addEventListener("DOMContentLoaded", function(event) {
   if (localStorage.getItem('tasklist')) {
   list.innerHTML = localStorage.getItem('tasklist');
   }
+
 });

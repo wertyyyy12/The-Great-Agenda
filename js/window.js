@@ -59,10 +59,21 @@ function changePrettyDate() {
 
 function changeTitle() {
   chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
-    var title = tabs[0].title;
-    var url = tabs[0].url;
+    try {
+      var title = tabs[0].title;
+      var url = tabs[0].url;
+    }
+    catch {
+      var title = "";
+      var url = "";
+    }
     document.getElementById("LinkLabel").innerHTML = title;
-    var favicon = "https://s2.googleusercontent.com/s2/favicons?domain_url=" + url
+    if (url != "") {
+      var favicon = "https://s2.googleusercontent.com/s2/favicons?domain_url=" + url;
+    }
+    else {
+      var favicon = "";
+    }
     document.getElementById("FAVICON").setAttribute("src", favicon);
   });
 }

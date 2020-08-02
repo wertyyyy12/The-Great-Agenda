@@ -192,7 +192,6 @@ function checkIfDueSoon() {
     }
   }
 }
-  checkIfDueSoon();
   var lastA = localStorage.getItem("lastAtime");
   console.log("Last alarm was " + DiffofDatesInms(getNow().total, new Date(lastA)) / 60000 + " minutes ago.");
   if (DiffofDatesInms(getNow().total, new Date(lastA)) > 7200000) {

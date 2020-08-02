@@ -53,12 +53,24 @@ var months = {
   12: "December"
 };
 
+var days = {
+  0: "Sunday",
+  1: "Monday",
+  2: "Tuesday",
+  3: "Wednesday",
+  4: "Thursday",
+  5: "Friday",
+  6: "Saturday"
+};
+
 function changePrettyDate() {
   var prettyDate = document.getElementById("prettyDate");
   var date = document.getElementById("Date").value;
-  var d = new Date(document.getElementById("Date").value);
+  //
+  // var d = new Date(document.getElementById("Date").value);
   date = getMDY(date);
-  var dateString = months[date.month] + " " + date.day + " ";
+  var correctD = new Date(Date.UTC(date.year, date.month-1, date.day+1));
+  var dateString = days[correctD.getDay()] + ", " + months[date.month] + " " + date.day + " ";
   prettyDate.innerHTML = dateString;
 }
 
@@ -141,7 +153,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     var day = parseInt(date.slice(8,10));
     var year = parseInt(date.slice(0,4));
     var correctD = new Date(Date.UTC(year, month-1, day+1));
-    var dateString = months[month] + " " + day + " ";
+    var dateString = days[correctD.getDay()] + ", " + months[month] + " " + day + " ";
     var link = document.getElementById("Link").value;
 
     //Remove button formatting

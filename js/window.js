@@ -2,7 +2,12 @@ window.onload=function() {
   document.getElementById("Finish").click();
   document.getElementById("Link").focus();
   chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
-    var url = tabs[0].url;
+    try {
+      var url = tabs[0].url;
+    }
+    catch {
+      var url = "";
+    }
     document.getElementById("Link").value = url;
   });
 };
@@ -59,6 +64,7 @@ function changePrettyDate() {
 
 function changeTitle() {
   chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
+    //If the url/titles are not valid, set them to blank and handle them accordingly (set favicon image and title field to blank.)
     try {
       var title = tabs[0].title;
       var url = tabs[0].url;
@@ -142,14 +148,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
     //Some slick string manipulation to get the link tag to work correctly
     if (name != '') {                                                                                                   //EDIT: turns out ids CAN have spaces, u just have to put quotes around the id. Well guess what too bad I am so not going to go through the entire thing just to not okokokokokokok
       if (isUrl(link)==false) {                                                                                         //inject date into id lol. ids cant have spaces so we replace the spaces with "ok", then we replace the oks with spaces again when we want to decode.
-        list.innerHTML += '<li id=' + '"' + name + '">' + '<div class=item id=item nm=' + '"' + name + '">' + name +': ' + '<label class=dateStr id=' + String(correctD).replace(/ /g, 'ok') + '>' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' + '<div>' + '</li>';
+        list.innerHTML += '<li id=' + '"' + name + '">' + '<div class=item id=item nm=' + '"' + name + '">' + name +': ' + '<label class=dateStr id="' + correctD + '">' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' + '<div>' + '</li>';
         // chrome.storage.local.set({'tasklist': list.innerHTML});
         // localStorage.setItem('tasklist', list.innerHTML);
       }
       else {
       // localStorage.setItem('tasklist', list.innerHTML);
       // chrome.storage.local.set({'tasklist': list.innerHTML});
-      list.innerHTML += '<li id=' + '"' + name + '">' + '<div class=item id=item nm=' + '"' + name + '">' + '<a target="_blank" href=' + link + '>' + name + '</a>' +': ' + '<label class=dateStr id=' + String(correctD).replace(/ /g, 'ok') + '>' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' + '<div>' + '</li>';
+      list.innerHTML += '<li id=' + '"' + name + '">' + '<div class=item id=item nm=' + '"' + name + '">' + '<a target="_blank" href=' + link + '>' + name + '</a>' +': ' + '<label class=dateStr id="' + correctD + '">' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' + '<div>' + '</li>';
       // localStorage.setItem('tasklist', list.innerHTML);
       }
       document.getElementById("Name").value = "";
@@ -178,8 +184,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     for (var i = 0; i < len; i += 1) {
       var today = new Date();
-      var originalID = dates[i].id;
-      var dateInfo = originalID.replace(/ok/g, ' ');
+      var dateInfo = dates[i].id;
+      // var dateInfo = originalID; //.replace(/ok/g, ' ');
       var storedDate = new Date(dateInfo);
       remainingDays = dateDiffInDays(today, storedDate);
       tills[i].innerHTML = remainingDays;

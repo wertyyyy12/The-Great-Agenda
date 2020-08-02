@@ -107,6 +107,7 @@ chrome.runtime.onInstalled.addListener(function() {
 
 
 function checkIfDueSoon() {
+  var msPerDay = 1000 * 60 * 60 * 24;
   function dateDiffInDays(a, b) {
     // Discard the time and time-zone information.
     const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
@@ -118,7 +119,6 @@ function checkIfDueSoon() {
   console.log(html);
   var div = document.createElement("div");
   div.innerHTML = html;
-  var msPerDay = 1000 * 60 * 60 * 24;
   var tills = div.getElementsByClassName("daysTill");
   var items = div.getElementsByClassName("item");
   var dates = div.getElementsByClassName("dateStr");
@@ -127,8 +127,8 @@ function checkIfDueSoon() {
   var sendNotfication;
   for (var i = 0; i < len; i += 1) {
     var today = new Date();
-    var originalID = dates[i].id;
-    var dateInfo = originalID.replace(/ok/g, ' ');
+    var dateInfo = dates[i].id;
+    // var dateInfo = originalID.replace(/ok/g, ' ');
     var storedDate = new Date(dateInfo);
     var remainingDays = dateDiffInDays(today, storedDate);
     var nameOfAssign = items[i].parentElement.id;
@@ -222,13 +222,13 @@ chrome.notifications.onButtonClicked.addListener(function(notifId, btnIdx) {
 
     var targets = Array.prototype.slice.call(doc.getElementsByTagName("li"));
     console.log(targets);
-    var finalindex = 0;
-    var finalTarget = 0;
+    var finalindex;
+    var finalTarget;
     targets.forEach((item, index) => {
       console.log(item.id);
       console.log(notifId);
       if (item.id.trim() == notifId.trim()) {
-        console.log("match found.")
+        console.log("match found.");
         console.log(targets[index]);
         finalTarget = targets[index].outerHTML;
       }

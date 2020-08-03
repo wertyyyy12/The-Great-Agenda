@@ -1,3 +1,6 @@
 -Put tasks that have a due date closer to the current date higher on the list (closed for now, too much effort for something insignificant)
--Make option to set 1, 2, or no reminders for due dates.
--Option to edit due dates for assignments even after they are submitted and on the list.
+-Make option to set 1, 2, or no reminders for due dates. (low priority)
+-Option to edit due dates and names for assignments even after they are submitted and on the list.
+  -Upon right clicking an assignment and clicking the "edit" option, that assignment is removed from the list,
+ but its details are auto filled into the respective link, date, and name fields. User can then resubmit based of this
+ assignment for effectively "modifying" the assignment.

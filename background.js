@@ -197,6 +197,7 @@ function checkIfDueSoon() {
   if (DiffofDatesInms(getNow().total, new Date(lastA)) > 7200000) {
     console.log("MISSED!");
     checkIfDueSoon();
+    localStorage.setItem("lastAtime", getNow().total.toString());
   }
 
   chrome.alarms.onAlarm.addListener(function(alarm) {

@@ -29,13 +29,38 @@ function getMDY(d) {
 }
 
 function isUrl(string) {
-  try {
-    new URL(string);
-  } catch (_) {
-    return false;
+  //url cant start with "javascript:"
+  if (string.trim().substring(0, 11) != "javascript:") {
+    try {
+      new URL(string);
+    } catch (_) {
+      return false;
+    }
+
+    return true;
+
   }
 
-  return true;
+  else {
+    return false;
+  }
+}
+
+
+//Takes out the < and > characters from a string to prevent input fields from doing any stupid tricks with HTML.
+//We also filter out the 'javascript:' prefix just to be safe.
+function filter(string) {
+  console.log(string);
+  if (string.trim().substring(0, 11) == "javascript:") {
+    var given = string.replace("javascript:", "");
+  }
+
+  else {
+    var given = string;
+  }
+  var modifyOne = given.replace(new RegExp('>', 'g'), '');
+  var modifyTwo = modifyOne.replace(new RegExp('<', 'g'), '');
+  return modifyTwo;
 }
 
 var months = {
@@ -85,7 +110,7 @@ function changeTitle() {
       var title = "";
       var url = "";
     }
-    document.getElementById("LinkLabel").innerHTML = title;
+    document.getElementById("LinkLabel").innerHTML = filter(title);
     if (url != "") {
       var favicon = "https://s2.googleusercontent.com/s2/favicons?domain_url=" + url;
     }
@@ -146,7 +171,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
   form.addEventListener('submit', function (event) {
     event.preventDefault();
-    var name = document.getElementById("Name").value;
+    var name = filter(document.getElementById("Name").value);
     var date = document.getElementById("Date").value;
     //Date formatting
     var month = parseInt(date.slice(5,7));

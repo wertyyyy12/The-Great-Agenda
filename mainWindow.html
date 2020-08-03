@@ -4,9 +4,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
     <title>Agenda</title>
     <style>
-    li{
+    li {
       margin-top: 0px;
-      font-size: 20px;
+      font-size: 18px;
       transition: all 0.8s ease-out;
       opacity: 0;
       height: 2em;
@@ -19,8 +19,22 @@
       margin-top:0;
     }
 
-    .input {
-      /* margin-bottom: 20px; */
+    .edit {
+      border-radius: 6px;
+      background-color: #ffffff;
+      border: 2px solid #32b818;
+      color: green;
+      text-align: center;
+      text-decoration: none;
+      visibility: hidden;
+      opacity: 0;
+      transition: visibility 0s, opacity 0.35s linear;
+      font-size: 17px;
+      cursor: pointer;
+    }
+
+    .edit:hover {
+      background-color: #29d6cb;
     }
 
     .link {
@@ -30,6 +44,16 @@
 
     #item:hover {
       background-color: #29d6cb;
+    }
+
+    #item:hover > .edit {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    #item:hover > .Remove {
+      visibility: visible;
+      opacity: 1;
     }
 
     #item {
@@ -52,7 +76,6 @@
       display: inline-block;
       font-size: 20px;
       margin: 4px 2px;
-      transition-duration: 0.4s;
       cursor: pointer;
     }
 
@@ -75,9 +98,11 @@
       color: red;
       text-align: center;
       text-decoration: none;
-      display: inline-block;
+      visibility: hidden;
+      opacity: 0;
+      transition: visibility 0s, opacity 0.35s linear;
+      transition-duration: 0.35s;
       font-size: 17px;
-      transition-duration: 0.4s;
       cursor: pointer;
     }
 

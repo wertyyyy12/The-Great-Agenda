@@ -255,7 +255,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         editingFlag = false;
       }
       else {
-          list.innerHTML += added;
+        list.innerHTML += added;
       }
       document.getElementById("Name").value = "";
       document.getElementById("Link").value = "";
@@ -292,6 +292,17 @@ document.addEventListener("DOMContentLoaded", function(event) {
     for (var i = 0; i < editButtons.length; i += 1) {
       var button = editButtons[i];
       button.addEventListener('click', function () {
+        //Reverting visual changes in case someone pressed a different edit assignment first.
+        editLabel.style.display = 'none';
+        textBoxes.forEach(function(box) {
+          box.style.backgroundColor = '#ffffff';
+        });
+
+        var itemsAsArray = Array.prototype.slice.call(items);
+        itemsAsArray.forEach(function(item) {
+          item.style.backgroundColor = '#ffffff';
+        });
+        document.getElementById('Finish').innerHTML = 'Finish';
         //Making the (Editing) h2 visible and turn the text boxes green.
         editLabel.style.display = 'inline-block';
         textBoxes.forEach(function(box) {

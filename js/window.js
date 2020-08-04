@@ -50,7 +50,6 @@ function isUrl(string) {
 //Takes out the < and > characters from a string to prevent input fields from doing any stupid tricks with HTML.
 //We also filter out the 'javascript:' prefix just to be safe.
 function filter(string) {
-  console.log(string);
   if (string.trim().substring(0, 11) == "javascript:") {
     var given = string.replace("javascript:", "");
   }
@@ -62,6 +61,17 @@ function filter(string) {
   var modifyTwo = modifyOne.replace(new RegExp('<', 'g'), '');
   return modifyTwo;
 }
+
+Date.prototype.yyyymmdd = function() {
+  var mm = this.getMonth() + 1; // getMonth() is zero-based
+  var dd = this.getDate();
+
+  return [this.getFullYear(),
+          (mm>9 ? '' : '0') + mm,
+          (dd>9 ? '' : '0') + dd
+        ].join('-');
+};
+
 
 var months = {
   1: "January",
@@ -130,6 +140,7 @@ function dateDiffInDays(a, b) {
   return Math.floor((utc2 - utc1) / _MS_PER_DAY);
 }
 
+var editFlag = false;
 document.addEventListener("DOMContentLoaded", function(event) {
   changeTitle();
   document.getElementById("Date").valueAsDate = new Date();
@@ -185,14 +196,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
     //Some slick string manipulation to get the link tag to work correctly
     if (name != '') {                                                                                                   //EDIT: turns out ids CAN have spaces, u just have to put quotes around the id. Well guess what too bad I am so not going to go through the entire thing just to not okokokokokokok
       if (isUrl(link)==false) {                                                                                         //inject date into id lol. ids cant have spaces so we replace the spaces with "ok", then we replace the oks with spaces again when we want to decode.
-        list.innerHTML += '<li id=' + '"' + name + '">' + '<div class=item id=item nm=' + '"' + name + '">' + name +': ' + '<label class=dateStr id="' + correctD + '">' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' + '<div>' + '</li>';
+        list.innerHTML += '<li id=' + '"' + name + '">' + '<div class=item id=item nm=' + '"' + name + '">' + name +': ' + '<label class=dateStr id="' + correctD + '">' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' +  '&nbsp&nbsp' + '<button type=button class=edit>Edit</button>' + '<div>' + '</li>';
         // chrome.storage.local.set({'tasklist': list.innerHTML});
         // localStorage.setItem('tasklist', list.innerHTML);
       }
       else {
       // localStorage.setItem('tasklist', list.innerHTML);
       // chrome.storage.local.set({'tasklist': list.innerHTML});
-      list.innerHTML += '<li id=' + '"' + name + '">' + '<div class=item id=item nm=' + '"' + name + '">' + '<a target="_blank" href=' + link + '>' + name + '</a>' +': ' + '<label class=dateStr id="' + correctD + '">' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' + '<div>' + '</li>';
+        list.innerHTML += '<li id=' + '"' + name + '">' + '<div class=item id=item nm=' + '"' + name + '">' + '<a target="_blank" href=' + link + '>' + name + '</a>' +': ' + '<label class=dateStr id="' + correctD + '">' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' + '&nbsp&nbsp' +'<button type=button class=edit>Edit</button>' + '<div>' + '</li>';
       // localStorage.setItem('tasklist', list.innerHTML);
       }
       document.getElementById("Name").value = "";
@@ -214,11 +225,56 @@ document.addEventListener("DOMContentLoaded", function(event) {
           //localStorage.setItem('tasklist', list.innerHTML);
         });
     }
+
+
+    var editButtons = document.getElementsByClassName('edit');
+    var textBoxes = [document.getElementById('Link'), document.getElementById('Date'), document.getElementById('Name')];
+    var items = document.getElementsByClassName("item");
+    var editLabel = document.getElementById('editLabel');
+    //Yes, I use single and double quotes interchangably!
+    console.log(editButtons);
+    for (var i = 0; i < editButtons.length; i += 1) {
+      var button = editButtons[i];
+      button.addEventListener('click', function () {
+        //Making the (Editing) h2 visible and turn the text boxes green.
+        editLabel.style.display = 'inline-block';
+        textBoxes.forEach(function(box) {
+          box.style.backgroundColor = '#5af558';
+        });
+        console.log(this);
+        //Extracting the assignment info that the person selected to edit.
+        var placeDate = new Date();
+        var placeName = this.parentElement.parentElement.id;
+        for (child of this.parentElement.children) {
+          if (child.tagName == "label") {
+            placeDate = child.id;
+          }
+        }
+
+        console.log("EXTRACTED INFO:");
+        console.log(placeDate);
+        console.log(placeName);
+        console.log("END");
+
+        //Autofill the date and name values with the pre existing ones for that assignment.
+        var pDate = new Date(placeDate);
+        var dStr = pDate.yyyymmdd();
+        console.log(dStr);
+        document.getElementById('Date').value = dStr;
+        document.getElementById('Name').value = placeName;
+
+        this.parentElement.style.backgroundColor = '#5af558';
+
+      });
+    }
+
+
     tills = document.getElementsByClassName("daysTill");
-    items = document.getElementsByClassName("item");
+
     dates = document.getElementsByClassName("dateStr");
     len = tills.length;
 
+    //Format assignment due date colors based on due dates.
     for (var i = 0; i < len; i += 1) {
       var today = new Date();
       var dateInfo = dates[i].id;

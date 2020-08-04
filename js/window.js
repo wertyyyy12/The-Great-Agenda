@@ -236,7 +236,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     if (editingFlag == true) {
       document.getElementById(name).style.backgroundColor = '#42f557';
-      setTimeout(function() {document.getElementById(name).style.backgroundColor = '#ffffff'; localStorage.setItem('tasklist', list.innerHTML);}, 1000);
+      setTimeout(function() {document.getElementById(name).style.backgroundColor = '#ffffff'; localStorage.setItem('tasklist', list.innerHTML);}, 300);
       editingFlag = false;
     }
 

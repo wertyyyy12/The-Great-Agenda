@@ -12,6 +12,7 @@ window.onload=function() {
   });
 };
 
+
 //Get month, day, and year given a date in input form (ex: 2005-9-12)
 //Acess with .month, .day, and .year properties of returned object
 function getMDY(d) {
@@ -62,6 +63,8 @@ function filter(string) {
   return modifyTwo;
 }
 
+//Thx stack overflow lol
+//When called on a Date object, will return a YYYY-MM-DD string based on the date.
 Date.prototype.yyyymmdd = function() {
   var mm = this.getMonth() + 1; // getMonth() is zero-based
   var dd = this.getDate();
@@ -140,12 +143,10 @@ function dateDiffInDays(a, b) {
   return Math.floor((utc2 - utc1) / _MS_PER_DAY);
 }
 
-var editFlag = false;
 document.addEventListener("DOMContentLoaded", function(event) {
   changeTitle();
   document.getElementById("Date").valueAsDate = new Date();
   date = getMDY(document.getElementById("Date").value);
-  document.getElementById("Date").valueAsDate = new Date();
   var form = document.getElementById("aInfo");
   var list = document.getElementById("taskList");
   changePrettyDate();
@@ -180,6 +181,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
     chrome.notifications.clear('tst');
   }
 
+  var editingFlag = false; //A boolean flag to use later
+  var itemChanged = 0;
   form.addEventListener('submit', function (event) {
     event.preventDefault();
     var name = filter(document.getElementById("Name").value);
@@ -191,9 +194,29 @@ document.addEventListener("DOMContentLoaded", function(event) {
     var correctD = new Date(Date.UTC(year, month-1, day+1));
     var dateString = days[correctD.getDay()] + ", " + months[month] + " " + day + " ";
     var link = document.getElementById("Link").value;
+    var items = document.getElementsByClassName('item');
+    var textBoxes = [document.getElementById('Link'), document.getElementById('Date'), document.getElementById('Name')];
+    var editLabel = document.getElementById('editLabel');
 
-    //Remove button formatting
-    //Some slick string manipulation to get the link tag to work correctly
+    //Handle the submission separately if we are in editing mode.
+    if (editingFlag == true) {
+      //Revert visual changes.
+      editLabel.style.display = 'none';
+      textBoxes.forEach(function(box) {
+        box.style.backgroundColor = '#ffffff';
+      });
+
+      var itemsAsArray = Array.prototype.slice.call(items);
+      itemsAsArray.forEach(function(item) {
+        item.style.backgroundColor = '#ffffff';
+      });
+      document.getElementById('Finish').innerHTML = 'Finish';
+      itemChanged.remove();
+
+
+    }
+
+
     if (name != '') {                                                                                                   //EDIT: turns out ids CAN have spaces, u just have to put quotes around the id. Well guess what too bad I am so not going to go through the entire thing just to not okokokokokokok
       if (isUrl(link)==false) {                                                                                         //inject date into id lol. ids cant have spaces so we replace the spaces with "ok", then we replace the oks with spaces again when we want to decode.
         list.innerHTML += '<li id=' + '"' + name + '">' + '<div class=item id=item nm=' + '"' + name + '">' + name +': ' + '<label class=dateStr id="' + correctD + '">' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' +  '&nbsp&nbsp' + '<button type=button class=edit>Edit</button>' + '<div>' + '</li>';
@@ -210,6 +233,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
       document.getElementById("Link").value = "";
       document.getElementById("Link").focus();
     }
+
+    if (editingFlag == true) {
+      document.getElementById(name).style.backgroundColor = '#42f557';
+      setTimeout(function() {document.getElementById(name).style.backgroundColor = '#ffffff'; localStorage.setItem('tasklist', list.innerHTML);}, 1000);
+      editingFlag = false;
+    }
+
     // localStorage.setItem('tasklist', list.innerHTML);
     // chrome.storage.local.set({'tasklist': list.innerHTML});
     buttons = document.getElementsByClassName('Remove');
@@ -227,10 +257,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
 
 
+
+
+
     var editButtons = document.getElementsByClassName('edit');
-    var textBoxes = [document.getElementById('Link'), document.getElementById('Date'), document.getElementById('Name')];
-    var items = document.getElementsByClassName("item");
-    var editLabel = document.getElementById('editLabel');
+
+
+
     //Yes, I use single and double quotes interchangably!
     console.log(editButtons);
     for (var i = 0; i < editButtons.length; i += 1) {
@@ -242,11 +275,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
           box.style.backgroundColor = '#5af558';
         });
         console.log(this);
+        itemChanged = this.parentElement.parentElement;
         //Extracting the assignment info that the person selected to edit.
+        console.log(this.parentElement.children);
         var placeDate = new Date();
         var placeName = this.parentElement.parentElement.id;
         for (child of this.parentElement.children) {
-          if (child.tagName == "label") {
+          if (child.tagName == "LABEL") {
             placeDate = child.id;
           }
         }
@@ -264,9 +299,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
         document.getElementById('Name').value = placeName;
 
         this.parentElement.style.backgroundColor = '#5af558';
+        document.getElementById('Finish').innerHTML = 'Finish Editing';
+        editingFlag = true;
 
       });
     }
+
+
+
 
 
     tills = document.getElementsByClassName("daysTill");

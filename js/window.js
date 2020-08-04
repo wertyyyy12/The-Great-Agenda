@@ -198,46 +198,69 @@ document.addEventListener("DOMContentLoaded", function(event) {
     var textBoxes = [document.getElementById('Link'), document.getElementById('Date'), document.getElementById('Name')];
     var editLabel = document.getElementById('editLabel');
 
-    //Handle the submission separately if we are in editing mode.
-    if (editingFlag == true) {
-      //Revert visual changes.
-      editLabel.style.display = 'none';
-      textBoxes.forEach(function(box) {
-        box.style.backgroundColor = '#ffffff';
-      });
-
-      var itemsAsArray = Array.prototype.slice.call(items);
-      itemsAsArray.forEach(function(item) {
-        item.style.backgroundColor = '#ffffff';
-      });
-      document.getElementById('Finish').innerHTML = 'Finish';
-      itemChanged.remove();
-
-
-    }
+    // //Handle the submission separately if we are in editing mode.
+    // if (editingFlag == true) {
+    //
+    //
+    //   // itemChanged.remove();
+    //
+    //
+    // }
 
 
     if (name != '') {                                                                                                   //EDIT: turns out ids CAN have spaces, u just have to put quotes around the id. Well guess what too bad I am so not going to go through the entire thing just to not okokokokokokok
       if (isUrl(link)==false) {                                                                                         //inject date into id lol. ids cant have spaces so we replace the spaces with "ok", then we replace the oks with spaces again when we want to decode.
-        list.innerHTML += '<li id=' + '"' + name + '">' + '<div class=item id=item nm=' + '"' + name + '">' + name +': ' + '<label class=dateStr id="' + correctD + '">' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' +  '&nbsp&nbsp' + '<button type=button class=edit>Edit</button>' + '<div>' + '</li>';
+        var added = '<li id=' + '"' + name + '">' + '<div class=item id=item nm=' + '"' + name + '">' + name +': ' + '<label class=dateStr id="' + correctD + '">' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' +  '&nbsp&nbsp' + '<button type=button class=edit>Edit</button>' + '<div>' + '</li>';
         // chrome.storage.local.set({'tasklist': list.innerHTML});
         // localStorage.setItem('tasklist', list.innerHTML);
       }
       else {
       // localStorage.setItem('tasklist', list.innerHTML);
       // chrome.storage.local.set({'tasklist': list.innerHTML});
-        list.innerHTML += '<li id=' + '"' + name + '">' + '<div class=item id=item nm=' + '"' + name + '">' + '<a target="_blank" href=' + link + '>' + name + '</a>' +': ' + '<label class=dateStr id="' + correctD + '">' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' + '&nbsp&nbsp' +'<button type=button class=edit>Edit</button>' + '<div>' + '</li>';
+        var added = '<li id=' + '"' + name + '">' + '<div class=item id=item nm=' + '"' + name + '">' + '<a target="_blank" href=' + link + '>' + name + '</a>' +': ' + '<label class=dateStr id="' + correctD + '">' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' + '&nbsp&nbsp' +'<button type=button class=edit>Edit</button>' + '<div>' + '</li>';
       // localStorage.setItem('tasklist', list.innerHTML);
+      }
+
+
+
+      if (editingFlag == true) {
+        //Revert visual changes.
+        editLabel.style.display = 'none';
+        textBoxes.forEach(function(box) {
+          box.style.backgroundColor = '#ffffff';
+        });
+
+        var itemsAsArray = Array.prototype.slice.call(items);
+        itemsAsArray.forEach(function(item) {
+          item.style.backgroundColor = '#ffffff';
+        });
+        document.getElementById('Finish').innerHTML = 'Finish';
+        // document.getElementById(name).style.opacity = 0;
+        localStorage.setItem('tasklist', list.innerHTML);
+
+        var itemString = itemChanged.outerHTML;
+        var current = localStorage.getItem('tasklist');
+        var replaceHtml = current.replace(itemString, added);
+
+        console.log(itemString);
+        console.log(added);
+        console.log(replaceHtml);
+        list.innerHTML = replaceHtml;
+
+        var name = filter(document.getElementById("Name").value);
+        console.log(name);
+        document.getElementById(name).style.backgroundColor = '#42f557';
+        // document.getElementById("myDIV").style.transition = "all 0.35s";
+        setTimeout(function() {document.getElementById(name).style.backgroundColor = '#ffffff'; localStorage.setItem('tasklist', list.innerHTML);}, 250);
+        editingFlag = false;
+      }
+      else {
+          list.innerHTML += added;
       }
       document.getElementById("Name").value = "";
       document.getElementById("Link").value = "";
       document.getElementById("Link").focus();
-    }
 
-    if (editingFlag == true) {
-      document.getElementById(name).style.backgroundColor = '#42f557';
-      setTimeout(function() {document.getElementById(name).style.backgroundColor = '#ffffff'; localStorage.setItem('tasklist', list.innerHTML);}, 300);
-      editingFlag = false;
     }
 
     // localStorage.setItem('tasklist', list.innerHTML);
@@ -250,7 +273,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
           //target is the li element
           var target = this.parentElement.parentElement;
           target.style.opacity = '0';
-          setTimeout(function(){target.remove(); localStorage.setItem('tasklist', list.innerHTML);}, 100);
+          setTimeout(function(){target.remove(); localStorage.setItem('tasklist', list.innerHTML);}, 250);
 //          this.parentElement.parentElement.remove();
           //localStorage.setItem('tasklist', list.innerHTML);
         });

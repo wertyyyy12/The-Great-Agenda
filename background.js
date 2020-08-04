@@ -146,6 +146,7 @@ function checkIfDueSoon() {
         type: "basic",
         title: "Assignment due",
         message: message,
+        priority: 1,
         iconUrl: "chrome-extension://paomcbcgpoikdcjhbanhllhdbemcjokf/Agenda_32.png",
         buttons: [
           {
@@ -161,6 +162,7 @@ function checkIfDueSoon() {
         type: "basic",
         title: "Assignment due today",
         message: message,
+        priority: 1,
         iconUrl: "chrome-extension://paomcbcgpoikdcjhbanhllhdbemcjokf/Agenda_32.png",
         buttons: [
           {
@@ -176,6 +178,7 @@ function checkIfDueSoon() {
         type: "basic",
         title: "Assignment overdue",
         message: message,
+        priority: 1,
         iconUrl: "chrome-extension://paomcbcgpoikdcjhbanhllhdbemcjokf/Agenda_32.png",
         buttons: [
           {
@@ -199,6 +202,8 @@ function checkIfDueSoon() {
     checkIfDueSoon();
     localStorage.setItem("lastAtime", getNow().total.toString());
   }
+
+  // checkIfDueSoon();
 
   chrome.alarms.onAlarm.addListener(function(alarm) {
     console.log("Beep from " + alarm.name);

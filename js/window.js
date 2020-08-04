@@ -197,7 +197,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     var items = document.getElementsByClassName('item');
     var textBoxes = [document.getElementById('Link'), document.getElementById('Date'), document.getElementById('Name')];
     var editLabel = document.getElementById('editLabel');
-
+    var cancel = document.getElementById("Cancel");
     // //Handle the submission separately if we are in editing mode.
     // if (editingFlag == true) {
     //
@@ -234,6 +234,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
         itemsAsArray.forEach(function(item) {
           item.style.backgroundColor = '#ffffff';
         });
+        cancel.style.display = 'none';
+
         document.getElementById('Finish').innerHTML = 'Finish';
         // document.getElementById(name).style.opacity = 0;
         localStorage.setItem('tasklist', list.innerHTML);
@@ -279,7 +281,20 @@ document.addEventListener("DOMContentLoaded", function(event) {
         });
     }
 
+    cancel.addEventListener('click', function () {
+      editLabel.style.display = 'none';
+      textBoxes.forEach(function(box) {
+        box.style.backgroundColor = '#ffffff';
+      });
 
+      var itemsAsArray = Array.prototype.slice.call(items);
+      itemsAsArray.forEach(function(item) {
+        item.style.backgroundColor = '#ffffff';
+      });
+      cancel.style.display = 'none';
+      document.getElementById('Finish').innerHTML = 'Finish';
+      editingFlag = false;
+    });
 
 
 
@@ -302,12 +317,16 @@ document.addEventListener("DOMContentLoaded", function(event) {
         itemsAsArray.forEach(function(item) {
           item.style.backgroundColor = '#ffffff';
         });
+        cancel.style.display = 'none';
+
         document.getElementById('Finish').innerHTML = 'Finish';
         //Making the (Editing) h2 visible and turn the text boxes green.
         editLabel.style.display = 'inline-block';
         textBoxes.forEach(function(box) {
           box.style.backgroundColor = '#5af558';
         });
+        cancel.style.display = 'inline-block';
+
         console.log(this);
         itemChanged = this.parentElement.parentElement;
         //Extracting the assignment info that the person selected to edit.

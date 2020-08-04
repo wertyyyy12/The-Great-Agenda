@@ -250,7 +250,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
           //target is the li element
           var target = this.parentElement.parentElement;
           target.style.opacity = '0';
-          setTimeout(function(){target.remove(); localStorage.setItem('tasklist', list.innerHTML);}, 250);
+          setTimeout(function(){target.remove(); localStorage.setItem('tasklist', list.innerHTML);}, 100);
 //          this.parentElement.parentElement.remove();
           //localStorage.setItem('tasklist', list.innerHTML);
         });

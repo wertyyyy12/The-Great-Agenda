@@ -206,6 +206,29 @@ document.addEventListener("DOMContentLoaded", function(event) {
     var textBoxes = [document.getElementById('Link'), document.getElementById('Date'), document.getElementById('Name')];
     var editLabel = document.getElementById('editLabel');
     var cancel = document.getElementById("Cancel");
+
+    function setVisualtoNormal() {
+      editLabel.style.display = 'none';
+      textBoxes.forEach(function(box) {
+        box.style.backgroundColor = '#ffffff';
+      });
+
+      var itemsAsArray = Array.prototype.slice.call(items);
+      itemsAsArray.forEach(function(item) {
+        console.log(item.style.backgroundColor);
+        if (item.style.backgroundColor == 'rgb(90, 245, 88)'){
+          item.style.backgroundColor = '#ffffff';
+        }
+        else {
+          console.log(item.style.backgroundColor);
+        }
+      });
+      // console.log(itemChanged);
+      // itemChanged.backgroundColor = '#ffffff';
+      cancel.style.display = 'none';
+
+      document.getElementById('Finish').innerHTML = 'Finish';
+    }
     // //Handle the submission separately if we are in editing mode.
     // if (editingFlag == true) {
     //
@@ -230,19 +253,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
       }
 
 
-
       if (editingFlag == true) {
-        //Revert visual changes.
-        editLabel.style.display = 'none';
-        textBoxes.forEach(function(box) {
-          box.style.backgroundColor = '#ffffff';
-        });
-
-        var itemsAsArray = Array.prototype.slice.call(items);
-        itemsAsArray.forEach(function(item) {
-          item.style.backgroundColor = '#ffffff';
-        });
-        cancel.style.display = 'none';
+        setVisualtoNormal();
 
         document.getElementById('Finish').innerHTML = 'Finish';
         // document.getElementById(name).style.opacity = 0;
@@ -259,9 +271,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
         var name = filter(document.getElementById("Name").value);
         console.log(name);
-        document.getElementById(name).style.backgroundColor = '#42f557';
+        console.log(document.getElementById(name));
+        document.getElementById(name).style.color = '#0a9c00';
         // document.getElementById("myDIV").style.transition = "all 0.35s";
-        setTimeout(function() {document.getElementById(name).style.backgroundColor = '#ffffff'; localStorage.setItem('tasklist', list.innerHTML);}, 75);
+        setTimeout(function() {document.getElementById(name).style.color = '#000000'; localStorage.setItem('tasklist', list.innerHTML);}, 75);
         editingFlag = false;
       }
       else {
@@ -272,6 +285,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
       document.getElementById("Link").focus();
 
     }
+
 
     // localStorage.setItem('tasklist', list.innerHTML);
     // chrome.storage.local.set({'tasklist': list.innerHTML});
@@ -290,17 +304,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
 
     cancel.addEventListener('click', function () {
-      editLabel.style.display = 'none';
-      textBoxes.forEach(function(box) {
-        box.style.backgroundColor = '#ffffff';
-      });
-
-      var itemsAsArray = Array.prototype.slice.call(items);
-      itemsAsArray.forEach(function(item) {
-        item.style.backgroundColor = '#ffffff';
-      });
-      cancel.style.display = 'none';
-      document.getElementById('Finish').innerHTML = 'Finish';
+      setVisualtoNormal();
       editingFlag = false;
     });
 
@@ -316,19 +320,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
       var button = editButtons[i];
       button.addEventListener('click', function () {
         //Reverting visual changes in case someone pressed a different edit assignment first.
-        editLabel.style.display = 'none';
-
-        textBoxes.forEach(function(box) {
-          box.style.backgroundColor = '#ffffff';
-        });
-
-        var itemsAsArray = Array.prototype.slice.call(items);
-        itemsAsArray.forEach(function(item) {
-          item.style.backgroundColor = '#ffffff';
-        });
-        cancel.style.display = 'none';
-
-        document.getElementById('Finish').innerHTML = 'Finish';
+        itemChanged = this.parentElement.parentElement;
+        setVisualtoNormal();
         //Making the (Editing) h2 visible and turn the text boxes green.
         editLabel.style.display = 'inline-block';
         textBoxes.forEach(function(box) {
@@ -337,7 +330,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         cancel.style.display = 'inline-block';
 
         console.log(this);
-        itemChanged = this.parentElement.parentElement;
+
         //Extracting the assignment info that the person selected to edit.
         console.log(this.parentElement.children);
         var placeDate = new Date();
@@ -377,7 +370,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         //We use the buttons innerHTML property as our boolean flag.
         switch (this.innerHTML) {
           case 'Mark':
-            this.parentElement.style.backgroundColor = '#ffbf00';
+            this.parentElement.style.backgroundColor = '#00f2ce';
             this.innerHTML = 'Unmark';
             break;
           case 'Unmark':

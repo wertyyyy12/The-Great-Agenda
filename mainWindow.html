@@ -33,9 +33,6 @@
       cursor: pointer;
     }
 
-    .edit:hover {
-      background-color: #29d6cb;
-    }
 
     .link {
       margin-bottom: 10px;
@@ -52,6 +49,11 @@
     }
 
     #item:hover > .Remove {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    #item:hover > .mark {
       visibility: visible;
       opacity: 1;
     }
@@ -116,6 +118,16 @@
       color: white;
     }
 
+    .mark:hover {
+      background-color: #ffae00;
+      color: white;
+    }
+
+    .edit:hover {
+      background-color: #29d6cb;
+      color: white;
+    }
+
     #LinkLabel {
       font-size: 10px;
     }
@@ -150,6 +162,20 @@
     #Cancel:hover {
       background-color: #ff2014;
       color: white;
+    }
+
+    .mark {
+      visibility: hidden;
+      border-radius: 6px;
+      background-color: #ffffff;
+      border: 2px solid #ffae00;
+      color: #ffae00;
+      text-align: center;
+      text-decoration: none;
+      opacity: 0;
+      transition: visibility 0s, opacity 0.35s linear;
+      font-size: 17px;
+      cursor: pointer;
     }
     </style>
     <script type="text/javascript" src="js/window.js"></script>

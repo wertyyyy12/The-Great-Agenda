@@ -4,3 +4,10 @@
   -Upon right clicking an assignment and clicking the "edit" option, that assignment is removed from the list,
  but its details are auto filled into the respective link, date, and name fields. User can then resubmit based of this
  assignment for effectively "modifying" the assignment.
+
+
+Add buttons
+Add listeners
+  Make them turn the background of the item to yellow
+  Change button text to 'unmark' and change the buttons function
+  Unmark function reverses changes. 

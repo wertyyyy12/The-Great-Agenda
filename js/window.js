@@ -218,14 +218,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     if (name != '') {                                                                                                   //EDIT: turns out ids CAN have spaces, u just have to put quotes around the id. Well guess what too bad I am so not going to go through the entire thing just to not okokokokokokok
       if (isUrl(link)==false) {                                                                                         //inject date into id lol. ids cant have spaces so we replace the spaces with "ok", then we replace the oks with spaces again when we want to decode.
-        var added = '<li id=' + '"' + name + '">' + '<div class=item id=item nm=' + '"' + name + '">' + name +': ' + '<label class=dateStr id="' + correctD + '">' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' +  '&nbsp&nbsp' + '<button type=button class=edit>Edit</button>' + '<div>' + '</li>';
+        var added = '<li id=' + '"' + name + '">' + '<div class=item id=item nm=' + '"' + name + '">' + name +': ' + '<label class=dateStr id="' + correctD + '">' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' +  '&nbsp&nbsp' + '<button type=button class=edit>Edit</button>' + '&nbsp&nbsp' + '<button type=button class=mark>Mark</button>' + '<div>' + '</li>';
         // chrome.storage.local.set({'tasklist': list.innerHTML});
         // localStorage.setItem('tasklist', list.innerHTML);
       }
       else {
       // localStorage.setItem('tasklist', list.innerHTML);
       // chrome.storage.local.set({'tasklist': list.innerHTML});
-        var added = '<li id=' + '"' + name + '">' + '<div class=item id=item nm=' + '"' + name + '">' + '<a target="_blank" href=' + link + '>' + name + '</a>' +': ' + '<label class=dateStr id="' + correctD + '">' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' + '&nbsp&nbsp' +'<button type=button class=edit>Edit</button>' + '<div>' + '</li>';
+        var added = '<li id=' + '"' + name + '">' + '<div class=item id=item nm=' + '"' + name + '">' + '<a target="_blank" href=' + link + '>' + name + '</a>' +': ' + '<label class=dateStr id="' + correctD + '">' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' + '&nbsp&nbsp' +'<button type=button class=edit>Edit</button>' + '&nbsp&nbsp' + '<button type=button class=mark>Mark</button>' + '<div>' + '</li>';
       // localStorage.setItem('tasklist', list.innerHTML);
       }
 
@@ -369,7 +369,24 @@ document.addEventListener("DOMContentLoaded", function(event) {
       });
     }
 
-
+    var markButtons = document.getElementsByClassName('mark');
+    for (var i = 0; i < markButtons.length; i += 1) {
+      var markButton = markButtons[i];
+      markButton.addEventListener('click', function () {
+        console.log(this);
+        //We use the buttons innerHTML property as our boolean flag.
+        switch (this.innerHTML) {
+          case 'Mark':
+            this.parentElement.style.backgroundColor = '#ffbf00';
+            this.innerHTML = 'Unmark';
+            break;
+          case 'Unmark':
+            this.parentElement.style.backgroundColor = '#ffffff';
+            this.innerHTML = 'Mark';
+        }
+        localStorage.setItem('tasklist', list.innerHTML);
+      });
+    }
 
 
 

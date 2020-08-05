@@ -2,7 +2,6 @@ window.onload=function() {
   // document.getElementById('Name').value = 'abcdefgK';
   document.getElementById("Finish").click();
   // document.getElementById('abcdefgK').remove();
-  console.log('ciclekd');
   document.getElementById("Link").focus();
   chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
     try {
@@ -147,10 +146,18 @@ function dateDiffInDays(a, b) {
   return Math.floor((utc2 - utc1) / _MS_PER_DAY);
 }
 
+function checkIfMarked(listChildren) {
+  var marked = false;
+  listChildren.forEach(function(child) {
+    if (child.innerHTML == 'Unmark') {
+      marked = true;
+    }
+  });
+
+  return marked;
+}
 document.addEventListener("DOMContentLoaded", function(event) {
-  console.log('load');
   changeTitle();
-  console.log(document.getElementById('Finish'));
   // document.getElementById("Finish").click();
   document.getElementById("Date").valueAsDate = new Date();
   date = getMDY(document.getElementById("Date").value);
@@ -190,8 +197,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
   var editingFlag = false; //A boolean flag to use later
   var itemChanged = 0;
+  // var bg = 0; //A flag that tells us the color of the item BEFORE changes are made to the background color.
   form.addEventListener('submit', function (event) {
-    console.log('Submit');
     event.preventDefault();
     var name = filter(document.getElementById("Name").value);
     var date = document.getElementById("Date").value;
@@ -208,6 +215,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     var cancel = document.getElementById("Cancel");
 
     function setVisualtoNormal() {
+      //Reverts any visual changes caused by edit button
       editLabel.style.display = 'none';
       textBoxes.forEach(function(box) {
         box.style.backgroundColor = '#ffffff';
@@ -215,12 +223,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
       var itemsAsArray = Array.prototype.slice.call(items);
       itemsAsArray.forEach(function(item) {
-        console.log(item.style.backgroundColor);
-        if (item.style.backgroundColor == 'rgb(90, 245, 88)'){
-          item.style.backgroundColor = '#ffffff';
-        }
-        else {
-          console.log(item.style.backgroundColor);
+        var children =  Array.prototype.slice.call(item.children);
+        // console.log(marked);
+        switch (checkIfMarked(children)) {
+          case false:
+            item.style.backgroundColor = '#ffffff';
+            break;
+          case true:
+            item.style.backgroundColor = '#00f2ce';
         }
       });
       // console.log(itemChanged);
@@ -229,52 +239,39 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
       document.getElementById('Finish').innerHTML = 'Finish';
     }
-    // //Handle the submission separately if we are in editing mode.
-    // if (editingFlag == true) {
-    //
-    //
-    //   // itemChanged.remove();
-    //
-    //
-    // }
-
 
     if (name != '') {                                                                                                   //EDIT: turns out ids CAN have spaces, u just have to put quotes around the id. Well guess what too bad I am so not going to go through the entire thing just to not okokokokokokok
-      if (isUrl(link)==false) {                                                                                         //inject date into id lol. ids cant have spaces so we replace the spaces with "ok", then we replace the oks with spaces again when we want to decode.
+      if (isUrl(link)==false) {
+        //The class of the li element tells whether the li is 'marked' or not                                                                                      //inject date into id lol. ids cant have spaces so we replace the spaces with "ok", then we replace the oks with spaces again when we want to decode.
         var added = '<li id=' + '"' + name + '">' + '<div class=item id=item nm=' + '"' + name + '">' + name +': ' + '<label class=dateStr id="' + correctD + '">' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' +  '&nbsp&nbsp' + '<button type=button class=edit>Edit</button>' + '&nbsp&nbsp' + '<button type=button class=mark>Mark</button>' + '<div>' + '</li>';
-        // chrome.storage.local.set({'tasklist': list.innerHTML});
-        // localStorage.setItem('tasklist', list.innerHTML);
       }
       else {
-      // localStorage.setItem('tasklist', list.innerHTML);
-      // chrome.storage.local.set({'tasklist': list.innerHTML});
         var added = '<li id=' + '"' + name + '">' + '<div class=item id=item nm=' + '"' + name + '">' + '<a target="_blank" href=' + link + '>' + name + '</a>' +': ' + '<label class=dateStr id="' + correctD + '">' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' + '&nbsp&nbsp' +'<button type=button class=edit>Edit</button>' + '&nbsp&nbsp' + '<button type=button class=mark>Mark</button>' + '<div>' + '</li>';
-      // localStorage.setItem('tasklist', list.innerHTML);
       }
 
-
+      //Change innerhtml of mark button to 'unmark' if the button was previously marked before editingFlag
+      // console.log(itemChanged.children);
       if (editingFlag == true) {
-        setVisualtoNormal();
-
-        document.getElementById('Finish').innerHTML = 'Finish';
         // document.getElementById(name).style.opacity = 0;
         localStorage.setItem('tasklist', list.innerHTML);
+
+
+        if (checkIfMarked(Array.prototype.slice.call(itemChanged.children[0].children))){
+          added = added.replace('<button type=button class=mark>Mark</button>', '<button type=button class=mark>Unmark</button>');
+          console.log(added);
+
+        }
 
         var itemString = itemChanged.outerHTML;
         var current = localStorage.getItem('tasklist');
         var replaceHtml = current.replace(itemString, added);
-
-        console.log(itemString);
-        console.log(added);
-        console.log(replaceHtml);
         list.innerHTML = replaceHtml;
 
-        var name = filter(document.getElementById("Name").value);
-        console.log(name);
-        console.log(document.getElementById(name));
-        document.getElementById(name).style.color = '#0a9c00';
-        // document.getElementById("myDIV").style.transition = "all 0.35s";
-        setTimeout(function() {document.getElementById(name).style.color = '#000000'; localStorage.setItem('tasklist', list.innerHTML);}, 75);
+        // var name = filter(document.getElementById("Name").value);
+        // document.getElementById(name).style.color = '#0a9c00';
+        // // document.getElementById("myDIV").style.transition = "all 0.35s";
+        // setTimeout(function() {document.getElementById(name).style.color = '#000000'; localStorage.setItem('tasklist', list.innerHTML);}, 75);
+        setVisualtoNormal();
         editingFlag = false;
       }
       else {
@@ -289,6 +286,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     // localStorage.setItem('tasklist', list.innerHTML);
     // chrome.storage.local.set({'tasklist': list.innerHTML});
+    //REMOVE BUTTON (X)
     buttons = document.getElementsByClassName('Remove');
     numB = buttons.length;
     for (var i = 0; i < numB; i += 1) {
@@ -315,7 +313,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
     //Yes, I use single and double quotes interchangably!
-    console.log(editButtons);
+    //EDIT BUTTON
     for (var i = 0; i < editButtons.length; i += 1) {
       var button = editButtons[i];
       button.addEventListener('click', function () {
@@ -329,10 +327,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
         });
         cancel.style.display = 'inline-block';
 
-        console.log(this);
 
         //Extracting the assignment info that the person selected to edit.
-        console.log(this.parentElement.children);
         var placeDate = new Date();
         var placeName = this.parentElement.parentElement.id;
         for (child of this.parentElement.children) {
@@ -341,15 +337,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
           }
         }
 
-        console.log("EXTRACTED INFO:");
-        console.log(placeDate);
-        console.log(placeName);
-        console.log("END");
 
         //Autofill the date and name values with the pre existing ones for that assignment.
         var pDate = new Date(placeDate);
         var dStr = pDate.yyyymmdd();
-        console.log(dStr);
         document.getElementById('Date').value = dStr;
         changePrettyDate();
         document.getElementById('Name').value = placeName;
@@ -358,16 +349,18 @@ document.addEventListener("DOMContentLoaded", function(event) {
         this.parentElement.style.backgroundColor = '#5af558';
         document.getElementById('Finish').innerHTML = 'Finish Editing';
         editingFlag = true;
-
       });
     }
 
+
+
+    //MARK BUTTON
     var markButtons = document.getElementsByClassName('mark');
     for (var i = 0; i < markButtons.length; i += 1) {
       var markButton = markButtons[i];
       markButton.addEventListener('click', function () {
-        console.log(this);
         //We use the buttons innerHTML property as our boolean flag.
+
         switch (this.innerHTML) {
           case 'Mark':
             this.parentElement.style.backgroundColor = '#00f2ce';
@@ -377,7 +370,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
             this.parentElement.style.backgroundColor = '#ffffff';
             this.innerHTML = 'Mark';
         }
+        console.log(this.parentElement.parentElement.class);
+        console.log(this.parentElement.parentElement);
         localStorage.setItem('tasklist', list.innerHTML);
+
       });
     }
 

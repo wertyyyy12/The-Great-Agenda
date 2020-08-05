@@ -191,7 +191,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   var editingFlag = false; //A boolean flag to use later
   var itemChanged = 0;
   form.addEventListener('submit', function (event) {
-    console.log('submit');
+    console.log('Submit');
     event.preventDefault();
     var name = filter(document.getElementById("Name").value);
     var date = document.getElementById("Date").value;

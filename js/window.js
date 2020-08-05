@@ -1,5 +1,8 @@
 window.onload=function() {
+  // document.getElementById('Name').value = 'abcdefgK';
   document.getElementById("Finish").click();
+  // document.getElementById('abcdefgK').remove();
+  console.log('ciclekd');
   document.getElementById("Link").focus();
   chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
     try {
@@ -112,6 +115,7 @@ function changePrettyDate() {
   prettyDate.innerHTML = dateString;
 }
 
+// localStorage.clear();
 function changeTitle() {
   chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
     //If the url/titles are not valid, set them to blank and handle them accordingly (set favicon image and title field to blank.)
@@ -144,7 +148,10 @@ function dateDiffInDays(a, b) {
 }
 
 document.addEventListener("DOMContentLoaded", function(event) {
+  console.log('load');
   changeTitle();
+  console.log(document.getElementById('Finish'));
+  // document.getElementById("Finish").click();
   document.getElementById("Date").valueAsDate = new Date();
   date = getMDY(document.getElementById("Date").value);
   var form = document.getElementById("aInfo");
@@ -184,6 +191,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   var editingFlag = false; //A boolean flag to use later
   var itemChanged = 0;
   form.addEventListener('submit', function (event) {
+    console.log('submit');
     event.preventDefault();
     var name = filter(document.getElementById("Name").value);
     var date = document.getElementById("Date").value;
@@ -253,7 +261,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         console.log(name);
         document.getElementById(name).style.backgroundColor = '#42f557';
         // document.getElementById("myDIV").style.transition = "all 0.35s";
-        setTimeout(function() {document.getElementById(name).style.backgroundColor = '#ffffff'; localStorage.setItem('tasklist', list.innerHTML);}, 250);
+        setTimeout(function() {document.getElementById(name).style.backgroundColor = '#ffffff'; localStorage.setItem('tasklist', list.innerHTML);}, 75);
         editingFlag = false;
       }
       else {
@@ -309,6 +317,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
       button.addEventListener('click', function () {
         //Reverting visual changes in case someone pressed a different edit assignment first.
         editLabel.style.display = 'none';
+
         textBoxes.forEach(function(box) {
           box.style.backgroundColor = '#ffffff';
         });
@@ -349,7 +358,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
         var dStr = pDate.yyyymmdd();
         console.log(dStr);
         document.getElementById('Date').value = dStr;
+        changePrettyDate();
         document.getElementById('Name').value = placeName;
+        // changePrettyDate();
 
         this.parentElement.style.backgroundColor = '#5af558';
         document.getElementById('Finish').innerHTML = 'Finish Editing';

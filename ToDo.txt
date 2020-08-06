@@ -6,8 +6,11 @@
  assignment for effectively "modifying" the assignment.
 
 
-Add buttons
-Add listeners
-  Make them turn the background of the item to yellow
-  Change button text to 'unmark' and change the buttons function
-  Unmark function reverses changes. 
+
+XSS:
+filter urls ending in .js
+
+Fix title bug after changing url by entering edit mode
+Make window wider?
+Auto scroll to end on assignment hover
+clean up character filtering code

@@ -248,9 +248,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
     if (name != '') { //EDIT: turns out ids CAN have spaces, u just have to put quotes around the id. Well guess what too bad I am so not going to go through the entire thing just to not okokokokokokok
       if (isUrl(link) == false) {
         //The class of the li element tells whether the li is 'marked' or not                                                                                      //inject date into id lol. ids cant have spaces so we replace the spaces with "ok", then we replace the oks with spaces again when we want to decode.
-        var added = '<li id=' + '"' + name + '">' + '<div class=item id=item>' + name + ': ' + '<label class=dateStr id="' + correctD + '">' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' + '&nbsp&nbsp' + '<button type=button class=edit>Edit</button>' + '&nbsp&nbsp' + '<button type=button class=mark>Mark</button>' + '<div>' + '</li>';
+        var added = '<li id=' + '"' + name + '">' + '<div class=item id=item>' + '<span id="nameBox">' + name + ': ' + '</span>' + '<label class=dateStr id="' + correctD + '">' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' + '&nbsp&nbsp' + '<button type=button class=edit>Edit</button>' + '&nbsp&nbsp' + '<button type=button class=mark>Mark</button>' + '<div>' + '</li>';
       } else {
-        var added = '<li id=' + '"' + name + '">' + '<div class=item id=item>' + '<a target="_blank" href=' + link + '>' + name + '</a>' + ': ' + '<label class=dateStr id="' + correctD + '">' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' + '&nbsp&nbsp' + '<button type=button class=edit>Edit</button>' + '&nbsp&nbsp' + '<button type=button class=mark>Mark</button>' + '<div>' + '</li>';
+        var added = '<li id=' + '"' + name + '">' + '<div class=item id=item>' + '<span id="nameBox">' + '<a target="_blank" href=' + link + '>' + name + '</a>' + '</span>' + ': ' + '<label class=dateStr id="' + correctD + '">' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' + '&nbsp&nbsp' + '<button type=button class=edit>Edit</button>' + '&nbsp&nbsp' + '<button type=button class=mark>Mark</button>' + '<div>' + '</li>';
       }
 
       //Change innerhtml of mark button to 'unmark' if the button was previously marked before editingFlag
@@ -420,6 +420,39 @@ document.addEventListener("DOMContentLoaded", function(event) {
         tills[i].style.color = "red";
       }
 
+    }
+
+    document.addEventListener('contextmenu', event => event.preventDefault());
+
+    links = document.getElementsByTagName('a');
+    var scroll = false; //FLAGS WHOHOOO
+    for (item of items) {
+      item.addEventListener("mousedown", function(event) {
+        // console.log(item);
+        var width = this.children[0].offsetWidth;
+        // this.children[0].style.transform = 'translateX(-1000px)';
+        if (event.button == 2) {
+          if (scroll == false) {
+            if (width > 1160) {
+              window.scrollTo({
+                top: 0,
+                left: width,
+                behavior: 'smooth'
+              });
+              scroll = true;
+            }
+          }
+
+          if (scroll == true) {
+            window.scrollTo({
+              top: 0,
+              left: 0,
+              behavior: 'smooth'
+            });
+            scroll = false;
+          }
+        }
+      });
     }
 
     // chrome.storage.local.set({'tasklist': list.innerHTML});

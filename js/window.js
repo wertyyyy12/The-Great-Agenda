@@ -425,32 +425,38 @@ document.addEventListener("DOMContentLoaded", function(event) {
     document.addEventListener('contextmenu', event => event.preventDefault());
 
     links = document.getElementsByTagName('a');
-    var scroll = false; //FLAGS WHOHOOO
+    var scroll = 0; //FLAGS WHOHOOO
     for (item of items) {
       item.addEventListener("mousedown", function(event) {
         // console.log(item);
         var width = this.children[0].offsetWidth;
         // this.children[0].style.transform = 'translateX(-1000px)';
+        var splits = Math.ceil(width / 1160) + 1;
         if (event.button == 2) {
-          if (scroll == false) {
-            if (width > 1160) {
-              window.scrollTo({
-                top: 0,
-                left: width,
-                behavior: 'smooth'
-              });
-              scroll = true;
-            }
-          }
-
-          if (scroll == true) {
+          if (scroll == splits) {
             window.scrollTo({
               top: 0,
               left: 0,
               behavior: 'smooth'
             });
-            scroll = false;
+            scroll = 0;
+          } else {
+            window.scrollTo({
+              top: 0,
+              left: window.scrollX + (width / splits),
+              behavior: 'smooth'
+            });
+            scroll = scroll + 1;
           }
+          if (window.scrollX >= width) {
+            window.scrollTo({
+              top: 0,
+              left: 0,
+              behavior: 'smooth'
+            });
+            scroll = 0;
+          }
+
         }
       });
     }

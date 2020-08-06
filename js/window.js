@@ -245,9 +245,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
     if (name != '') { //EDIT: turns out ids CAN have spaces, u just have to put quotes around the id. Well guess what too bad I am so not going to go through the entire thing just to not okokokokokokok
       if (isUrl(link) == false) {
         //The class of the li element tells whether the li is 'marked' or not                                                                                      //inject date into id lol. ids cant have spaces so we replace the spaces with "ok", then we replace the oks with spaces again when we want to decode.
-        var added = '<li id=' + '"' + name + '">' + '<div class=item id=item nm=' + '"' + name + '">' + name + ': ' + '<label class=dateStr id="' + correctD + '">' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' + '&nbsp&nbsp' + '<button type=button class=edit>Edit</button>' + '&nbsp&nbsp' + '<button type=button class=mark>Mark</button>' + '<div>' + '</li>';
+        var added = '<li id=' + '"' + name + '">' + '<div class=item id=item>' + name + ': ' + '<label class=dateStr id="' + correctD + '">' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' + '&nbsp&nbsp' + '<button type=button class=edit>Edit</button>' + '&nbsp&nbsp' + '<button type=button class=mark>Mark</button>' + '<div>' + '</li>';
       } else {
-        var added = '<li id=' + '"' + name + '">' + '<div class=item id=item nm=' + '"' + name + '">' + '<a target="_blank" href=' + link + '>' + name + '</a>' + ': ' + '<label class=dateStr id="' + correctD + '">' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' + '&nbsp&nbsp' + '<button type=button class=edit>Edit</button>' + '&nbsp&nbsp' + '<button type=button class=mark>Mark</button>' + '<div>' + '</li>';
+        var added = '<li id=' + '"' + name + '">' + '<div class=item id=item>' + '<a target="_blank" href=' + link + '>' + name + '</a>' + ': ' + '<label class=dateStr id="' + correctD + '">' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' + '&nbsp&nbsp' + '<button type=button class=edit>Edit</button>' + '&nbsp&nbsp' + '<button type=button class=mark>Mark</button>' + '<div>' + '</li>';
       }
 
       //Change innerhtml of mark button to 'unmark' if the button was previously marked before editingFlag
@@ -255,7 +255,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
       if (editingFlag == true) {
         // document.getElementById(name).style.opacity = 0;
         localStorage.setItem('tasklist', list.innerHTML);
-
 
         if (checkIfMarked(Array.prototype.slice.call(itemChanged.children[0].children))) {
           added = added.replace('<button type=button class=mark>Mark</button>', '<button type=button class=mark>Unmark</button>');
@@ -333,10 +332,16 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
         //Extracting the assignment info that the person selected to edit.
         var placeDate = new Date();
+        var placeLink = '';
         var placeName = this.parentElement.parentElement.id;
         for (child of this.parentElement.children) {
           if (child.tagName == "LABEL") {
             placeDate = child.id;
+          }
+
+          if (child.tagName == "A") {
+            placeLink = child.href;
+            console.log(placeLink);
           }
         }
 
@@ -347,6 +352,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
         document.getElementById('Date').value = dStr;
         changePrettyDate();
         document.getElementById('Name').value = placeName;
+        document.getElementById('Link').value = placeLink;
+        changeTitle();
         // changePrettyDate();
 
         this.parentElement.style.backgroundColor = '#5af558';

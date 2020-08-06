@@ -60,7 +60,10 @@ function filter(string) {
   }
   var modifyOne = given.replace(new RegExp('>', 'g'), '');
   var modifyTwo = modifyOne.replace(new RegExp('<', 'g'), '');
-  return modifyTwo;
+  var modifyThree = modifyTwo.replace(/"/g, '');
+  var modifyFour = modifyThree.replace(/'/g, '');
+  var modifyFive = modifyFour.replace(/`/g, '');
+  return modifyFive;
 }
 
 //Thx stack overflow lol

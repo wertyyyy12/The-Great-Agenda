@@ -140,55 +140,33 @@ function changeTitle() {
 }
 
 function changeTitleExtUrl(url) {
-  // chrome.tabs.create({
-  //   url: url,
-  //   active: false
-  // }, null);
 
-  // chrome.tabs.onUpdated.addListener(function listener(tabId, info) {
   document.getElementById("LinkLabel").innerHTML = "Loading...";
-  // chrome.tabs.query({
-  //   active: false,
-  //   url: url,
-  //   status: 'complete'
-  // }, function(tabs) {
-  //   var id = tabs[0].id;
-  //   console.log(tabs[0].url);
-  //   console.log(tabs[0].title);
-  //   var title = tabs[0].title;
-  //   document.getElementById("LinkLabel").innerHTML = filter(title);
-  //   chrome.tabs.onUpdated.removeListener(listener);
-  //   chrome.tabs.remove(id);
-  // })
+  document.getElementById("FAVICON").setAttribute("src", "");
 
-  var xhr = new XMLHttpRequest();
-  xhr.open("GET", url, true); //Async as shown by last parameter
-  xhr.onreadystatechange = function() {
-    if (xhr.readyState == 4) { //check if status == complete
-      var htmlResponse = xhr.responseText;
+  if (url != "") {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", url, true); //Async as shown by last parameter
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState == 4) { //check if status == complete
+        var htmlResponse = xhr.responseText;
 
-      var title = filter(htmlResponse.match("<title>(.*?)</title>")[1]);
-      document.getElementById("LinkLabel").innerHTML = title;
-      if (url != "") {
-        var favicon = "https://s2.googleusercontent.com/s2/favicons?domain_url=" + url;
-      } else {
-        var favicon = "";
+        var title = filter(htmlResponse.match("<title>(.*?)</title>")[1]);
+        document.getElementById("LinkLabel").innerHTML = title;
+        if (url != "") {
+          var favicon = "https://s2.googleusercontent.com/s2/favicons?domain_url=" + url;
+        } else {
+          var favicon = "";
+        }
+        document.getElementById("FAVICON").setAttribute("src", favicon);
       }
-      document.getElementById("FAVICON").setAttribute("src", favicon);
     }
+    xhr.send();
+  } else {
+    document.getElementById("LinkLabel").innerHTML = "";
+    document.getElementById("FAVICON").setAttribute("src", "");
   }
-  xhr.send();
-  // console.log(info.title);
-  // console.log(getUrl());
-  // // async getTitle() {
-  //
-  // }
-  // console.log(kakak);
-  // if (info.url == url) { //checking if this is really the tab we opened
 
-
-  // }
-  // });
 
 }
 const _MS_PER_DAY = 1000 * 60 * 60 * 24;
@@ -390,15 +368,17 @@ document.addEventListener("DOMContentLoaded", function(event) {
         var placeDate = new Date();
         var placeLink = '';
         var placeName = this.parentElement.parentElement.id;
-        console.log(this.parentElement.children[0].children);
+        console.log(this.parentElement.children);
         for (child of this.parentElement.children[0].children) {
-          if (child.tagName == "LABEL") {
-            placeDate = child.id;
-          }
-
           if (child.tagName == "A") {
             placeLink = child.href;
             console.log(placeLink);
+          }
+        }
+
+        for (child of this.parentElement.children) {
+          if (child.tagName == "LABEL") {
+            placeDate = child.id;
           }
         }
 

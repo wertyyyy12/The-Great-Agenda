@@ -32,5 +32,5 @@
   },
 
 
-  "permissions": ["tabs", "notifications", "alarms"]
+  "permissions": ["tabs", "notifications", "alarms", "<all_urls>"]
 }

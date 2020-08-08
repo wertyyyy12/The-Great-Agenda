@@ -138,6 +138,59 @@ function changeTitle() {
     document.getElementById("FAVICON").setAttribute("src", favicon);
   });
 }
+
+function changeTitleExtUrl(url) {
+  // chrome.tabs.create({
+  //   url: url,
+  //   active: false
+  // }, null);
+
+  // chrome.tabs.onUpdated.addListener(function listener(tabId, info) {
+  document.getElementById("LinkLabel").innerHTML = "Loading...";
+  // chrome.tabs.query({
+  //   active: false,
+  //   url: url,
+  //   status: 'complete'
+  // }, function(tabs) {
+  //   var id = tabs[0].id;
+  //   console.log(tabs[0].url);
+  //   console.log(tabs[0].title);
+  //   var title = tabs[0].title;
+  //   document.getElementById("LinkLabel").innerHTML = filter(title);
+  //   chrome.tabs.onUpdated.removeListener(listener);
+  //   chrome.tabs.remove(id);
+  // })
+
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", url, true); //Async as shown by last parameter
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState == 4) { //check if status == complete
+      var htmlResponse = xhr.responseText;
+
+      var title = filter(htmlResponse.match("<title>(.*?)</title>")[1]);
+      document.getElementById("LinkLabel").innerHTML = title;
+      if (url != "") {
+        var favicon = "https://s2.googleusercontent.com/s2/favicons?domain_url=" + url;
+      } else {
+        var favicon = "";
+      }
+      document.getElementById("FAVICON").setAttribute("src", favicon);
+    }
+  }
+  xhr.send();
+  // console.log(info.title);
+  // console.log(getUrl());
+  // // async getTitle() {
+  //
+  // }
+  // console.log(kakak);
+  // if (info.url == url) { //checking if this is really the tab we opened
+
+
+  // }
+  // });
+
+}
 const _MS_PER_DAY = 1000 * 60 * 60 * 24;
 // a and b are javascript Date objects
 function dateDiffInDays(a, b) {
@@ -337,7 +390,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
         var placeDate = new Date();
         var placeLink = '';
         var placeName = this.parentElement.parentElement.id;
-        for (child of this.parentElement.children) {
+        console.log(this.parentElement.children[0].children);
+        for (child of this.parentElement.children[0].children) {
           if (child.tagName == "LABEL") {
             placeDate = child.id;
           }
@@ -356,7 +410,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
         changePrettyDate();
         document.getElementById('Name').value = placeName;
         document.getElementById('Link').value = placeLink;
-        changeTitle();
+        console.log(placeLink);
+        changeTitleExtUrl(placeLink);
+        // changeTitle();
         // changePrettyDate();
 
         this.parentElement.style.backgroundColor = '#5af558';
@@ -422,6 +478,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     }
 
+    //Hide right click contextmenu so that right click scrolling is actually usable.
     document.addEventListener('contextmenu', event => event.preventDefault());
 
     links = document.getElementsByTagName('a');
@@ -431,6 +488,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         // console.log(item);
         var width = this.children[0].offsetWidth;
         // this.children[0].style.transform = 'translateX(-1000px)';
+        //Handle the autoscroll on right click feature.
         var splits = Math.ceil(width / 1160) + 1;
         if (event.button == 2) {
           if (scroll == splits) {

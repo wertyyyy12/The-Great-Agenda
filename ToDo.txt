@@ -8,3 +8,4 @@ filter urls ending in .js
 clean up character filtering code
 
 Fix title bug after changing url by entering edit mode
+Style text boxes to look cool

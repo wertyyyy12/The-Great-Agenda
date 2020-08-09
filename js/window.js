@@ -3,17 +3,7 @@ window.onload = function() {
   document.getElementById("Finish").click();
   // document.getElementById('abcdefgK').remove();
   document.getElementById("Link").focus();
-  chrome.tabs.query({
-    active: true,
-    lastFocusedWindow: true
-  }, tabs => {
-    try {
-      var url = tabs[0].url;
-    } catch {
-      var url = "";
-    }
-    document.getElementById("Link").value = url;
-  });
+
 };
 
 
@@ -141,7 +131,7 @@ function changeTitle() {
 
 function changeTitleExtUrl(url) {
 
-  document.getElementById("LinkLabel").innerHTML = "Loading...";
+  document.getElementById("LinkLabel").innerHTML = "";
   document.getElementById("FAVICON").setAttribute("src", "");
 
   if (url != "") {
@@ -189,8 +179,21 @@ function checkIfMarked(listChildren) {
 
   return marked;
 }
+
 document.addEventListener("DOMContentLoaded", function(event) {
   changeTitle();
+  chrome.tabs.query({
+    active: true,
+    lastFocusedWindow: true
+  }, tabs => {
+    try {
+      var url = tabs[0].url;
+    } catch {
+      var url = "";
+    }
+    document.getElementById("Link").value = url;
+  });
+
   // document.getElementById("Finish").click();
   document.getElementById("Date").valueAsDate = new Date();
   date = getMDY(document.getElementById("Date").value);
@@ -223,7 +226,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
       document.getElementById("LinkLabel").innerHTML = '';
       document.getElementById("FAVICON").setAttribute("src", '');
     } else {
-      changeTitle();
+      console.log(document.getElementById("Link").value);
+      changeTitleExtUrl(document.getElementById("Link").value);
     }
   });
 
@@ -249,6 +253,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
     var textBoxes = [document.getElementById('Link'), document.getElementById('Date'), document.getElementById('Name')];
     var editLabel = document.getElementById('editLabel');
     var cancel = document.getElementById("Cancel");
+
+    console.log(link);
 
     function setVisualtoNormal() {
       //Reverts any visual changes caused by edit button

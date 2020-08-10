@@ -105,6 +105,16 @@ function changePrettyDate() {
   prettyDate.innerHTML = dateString;
 }
 
+function getLastActiveTab() {
+  chrome.tabs.query({
+    active: true,
+    windowId: 1
+  }, tabs => {
+    console.log(tabs);
+    //Returns a 'tab' object
+    return tabs[0];
+  });
+}
 // localStorage.clear();
 function changeTitle() {
   chrome.tabs.query({
@@ -180,8 +190,7 @@ function checkIfMarked(listChildren) {
   return marked;
 }
 
-document.addEventListener("DOMContentLoaded", function(event) {
-  changeTitle();
+function setLinkToActiveTab() {
   chrome.tabs.query({
     active: true,
     lastFocusedWindow: true
@@ -193,6 +202,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
     document.getElementById("Link").value = url;
   });
+}
+
+document.addEventListener("DOMContentLoaded", function(event) {
+  changeTitle();
+  //Autofill url of open tab
+  setLinkToActiveTab();
 
   // document.getElementById("Finish").click();
   document.getElementById("Date").valueAsDate = new Date();
@@ -226,8 +241,20 @@ document.addEventListener("DOMContentLoaded", function(event) {
       document.getElementById("LinkLabel").innerHTML = '';
       document.getElementById("FAVICON").setAttribute("src", '');
     } else {
-      console.log(document.getElementById("Link").value);
-      changeTitleExtUrl(document.getElementById("Link").value);
+      chrome.tabs.query({
+        active: true,
+        windowId: 1
+      }, tabs => {
+        var url = tabs[0].url;
+        console.log(url);
+        if (url == document.getElementById("Link").value) {
+          changeTitle();
+        } else {
+          changeTitleExtUrl(document.getElementById("Link").value);
+        }
+        // use `url` here inside the callback because it's asynchronous!
+      });
+
     }
   });
 
@@ -345,6 +372,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     cancel.addEventListener('click', function() {
       setVisualtoNormal();
+      setLinkToActiveTab();
       editingFlag = false;
     });
 

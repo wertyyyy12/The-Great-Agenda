@@ -105,6 +105,8 @@ function changePrettyDate() {
   prettyDate.innerHTML = dateString;
 }
 
+
+
 function getLastActiveTab() {
   chrome.tabs.query({
     active: true,
@@ -119,7 +121,7 @@ function getLastActiveTab() {
 function changeTitle() {
   chrome.tabs.query({
     active: true,
-    lastFocusedWindow: true
+    windowId: 1
   }, tabs => {
     //If the url/titles are not valid, set them to blank and handle them accordingly (set favicon image and title field to blank.)
     try {
@@ -190,24 +192,24 @@ function checkIfMarked(listChildren) {
   return marked;
 }
 
-function setLinkToActiveTab() {
+
+
+var activeTab = 0;
+document.addEventListener("DOMContentLoaded", function(event) {
+  changeTitle();
+  //Autofill url of open tab
   chrome.tabs.query({
     active: true,
     lastFocusedWindow: true
   }, tabs => {
     try {
+      activeTab = tabs[0];
       var url = tabs[0].url;
     } catch {
       var url = "";
     }
     document.getElementById("Link").value = url;
   });
-}
-
-document.addEventListener("DOMContentLoaded", function(event) {
-  changeTitle();
-  //Autofill url of open tab
-  setLinkToActiveTab();
 
   // document.getElementById("Finish").click();
   document.getElementById("Date").valueAsDate = new Date();
@@ -221,7 +223,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     if (e.keyCode == 32) {
       chrome.tabs.query({
         active: true,
-        lastFocusedWindow: true
+        windowId: 1
       }, tabs => {
         var url = tabs[0].url;
         document.getElementById("Link").value = url;
@@ -245,11 +247,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
         active: true,
         windowId: 1
       }, tabs => {
+        console.log(tabs);
         var url = tabs[0].url;
         console.log(url);
         if (url == document.getElementById("Link").value) {
+          console.log('regular title change')
           changeTitle();
         } else {
+          console.log('ext;')
           changeTitleExtUrl(document.getElementById("Link").value);
         }
         // use `url` here inside the callback because it's asynchronous!

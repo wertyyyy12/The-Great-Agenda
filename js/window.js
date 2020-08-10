@@ -328,8 +328,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
     //REMOVE BUTTON (X)
     buttons = document.getElementsByClassName('Remove');
     numB = buttons.length;
-    for (var i = 0; i < numB; i += 1) {
-      buttons[i].addEventListener('click', function() {
+    for (button of buttons) {
+      button.addEventListener('click', function() {
         lists = document.getElementsByTagName('li');
         //target is the li element
         var target = this.parentElement.parentElement;
@@ -356,8 +356,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     //Yes, I use single and double quotes interchangably!
     //EDIT BUTTON
-    for (var i = 0; i < editButtons.length; i += 1) {
-      var button = editButtons[i];
+    for (button of editButtons) {
+      // var button = editButtons[i];
       button.addEventListener('click', function() {
         //Reverting visual changes in case someone pressed a different edit assignment first.
         itemChanged = this.parentElement.parentElement;
@@ -411,8 +411,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     //MARK BUTTON
     var markButtons = document.getElementsByClassName('mark');
-    for (var i = 0; i < markButtons.length; i += 1) {
-      var markButton = markButtons[i];
+    for (markButton of markButtons) {
+      // var markButton = markButtons[i];
       markButton.addEventListener('click', function() {
         //We use the buttons innerHTML property as our boolean flag.
 

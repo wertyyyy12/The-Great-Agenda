@@ -239,6 +239,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
   }
 
   document.getElementById("Link").addEventListener("keydown", handleKeys);
+  document.getElementById("Name").addEventListener("change", function() {
+    if (document.getElementById("Name").value == "") {
+      document.getElementById("Name").style["border-bottom"] = "2px solid red";
+    } else {
+      document.getElementById("Name").style["border-bottom"] = "2px solid green";
+    }
+  });
   document.getElementById("Date").addEventListener('change', changePrettyDate);
   document.getElementById("Link").addEventListener('change', function() {
     if (isUrl(document.getElementById("Link").value) == false) {

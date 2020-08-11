@@ -1,7 +1,6 @@
 -Put tasks that have a due date closer to the current date higher on the list (closed for now, too much effort for something insignificant)
 -Make option to set 1, 2, or no reminders for due dates. (low priority)
 
-Style text boxes to look cool
 
 XSS:
 filter urls ending in .js

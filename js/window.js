@@ -43,17 +43,23 @@ function isUrl(string) {
 //Takes out the < and > characters from a string to prevent input fields from doing any stupid tricks with HTML.
 //We also filter out the 'javascript:' prefix just to be safe.
 function filter(string) {
-  if (string.trim().substring(0, 11) == "javascript:") {
-    var given = string.replace("javascript:", "");
-  } else {
-    var given = string;
+  var given = string.replace("javascript:", "");
+  if (given.substring(given.length - 3, given.length) == '.js') {
+    given = given.slice(0, -3);
   }
-  var modifyOne = given.replace(new RegExp('>', 'g'), '');
-  var modifyTwo = modifyOne.replace(new RegExp('<', 'g'), '');
-  var modifyThree = modifyTwo.replace(/"/g, '');
-  var modifyFour = modifyThree.replace(/'/g, '');
-  var modifyFive = modifyFour.replace(/`/g, '');
-  return modifyFive;
+
+  // given = given.replace(new RegExp('.js', '$'), "");
+  // if (string.trim().substring(0, 11) == "javascript:") {
+  //
+  // } else {
+  //   var given = string;
+  // }
+  var blackListedCharacters = ['>', '<', '"', "'", '`', ';'];
+  var finished = given;
+  for (character of blackListedCharacters) {
+    finished = finished.replace(new RegExp(character, 'g'), '');
+  }
+  return finished;
 }
 
 //Thx stack overflow lol
@@ -192,6 +198,21 @@ function checkIfMarked(listChildren) {
   });
 
   return marked;
+}
+
+function resetForm() {
+  chrome.tabs.query({
+    active: true,
+    highlighted: true
+  }, tabs => {
+    var url = tabs[0].url;
+    document.getElementById("Link").value = url;
+    // use `url` here inside the callback because it's asynchronous!
+  });
+  changeTitle();
+  document.getElementById("Date").valueAsDate = new Date();
+  changePrettyDate();
+  document.getElementById("Name").value = "";
 }
 
 
@@ -354,7 +375,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
       document.getElementById("Name").value = "";
       document.getElementById("Link").value = "";
       document.getElementById("Link").focus();
-
+      resetForm();
     }
 
 
@@ -380,18 +401,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     cancel.addEventListener('click', function() {
       setVisualtoNormal();
-      chrome.tabs.query({
-        active: true,
-        highlighted: true
-      }, tabs => {
-        var url = tabs[0].url;
-        document.getElementById("Link").value = url;
-        // use `url` here inside the callback because it's asynchronous!
-      });
-      changeTitle();
-      document.getElementById("Date").valueAsDate = new Date();
-      changePrettyDate();
-      document.getElementById("Name").value = "";
+      resetForm();
       editingFlag = false;
     });
 

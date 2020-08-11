@@ -107,24 +107,26 @@ function changePrettyDate() {
 
 
 
-function getLastActiveTab() {
-  chrome.tabs.query({
-    active: true,
-    windowId: 1
-  }, tabs => {
-    console.log(tabs);
-    //Returns a 'tab' object
-    return tabs[0];
-  });
-}
+// function getLastActiveTab() {
+//   chrome.tabs.query({
+//     active: true,
+//     highlighted: true
+//   }, tabs => {
+//     console.log(tabs);
+//     //Returns a 'tab' object
+//     return tabs[0];
+//   });
+// }
 // localStorage.clear();
 function changeTitle() {
   chrome.tabs.query({
     active: true,
-    windowId: 1
+    highlighted: true
   }, tabs => {
+    console.log(tabs);
     //If the url/titles are not valid, set them to blank and handle them accordingly (set favicon image and title field to blank.)
     try {
+
       var title = tabs[0].title;
       var url = tabs[0].url;
     } catch {
@@ -196,7 +198,7 @@ function checkIfMarked(listChildren) {
 
 var activeTab = 0;
 document.addEventListener("DOMContentLoaded", function(event) {
-  changeTitle();
+
   //Autofill url of open tab
   chrome.tabs.query({
     active: true,
@@ -210,7 +212,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
     document.getElementById("Link").value = url;
   });
-
+  changeTitle();
   // document.getElementById("Finish").click();
   document.getElementById("Date").valueAsDate = new Date();
   date = getMDY(document.getElementById("Date").value);
@@ -223,7 +225,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     if (e.keyCode == 32) {
       chrome.tabs.query({
         active: true,
-        windowId: 1
+        highlighted: true
       }, tabs => {
         var url = tabs[0].url;
         document.getElementById("Link").value = url;
@@ -240,25 +242,19 @@ document.addEventListener("DOMContentLoaded", function(event) {
   document.getElementById("Date").addEventListener('change', changePrettyDate);
   document.getElementById("Link").addEventListener('change', function() {
     if (isUrl(document.getElementById("Link").value) == false) {
+      console.log('tf are u doing my guy');
       document.getElementById("LinkLabel").innerHTML = '';
       document.getElementById("FAVICON").setAttribute("src", '');
     } else {
-      chrome.tabs.query({
-        active: true,
-        windowId: 1
-      }, tabs => {
-        console.log(tabs);
-        var url = tabs[0].url;
-        console.log(url);
-        if (url == document.getElementById("Link").value) {
-          console.log('regular title change')
-          changeTitle();
-        } else {
-          console.log('ext;')
-          changeTitleExtUrl(document.getElementById("Link").value);
-        }
-        // use `url` here inside the callback because it's asynchronous!
-      });
+      console.log(activeTab.url);
+      console.log(document.getElementById("Link").value);
+      if (activeTab.url == document.getElementById("Link").value) {
+        console.log('regular title change');
+        changeTitle();
+      } else {
+        console.log('ext;')
+        changeTitleExtUrl(document.getElementById("Link").value);
+      }
 
     }
   });

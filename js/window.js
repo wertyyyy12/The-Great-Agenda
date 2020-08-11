@@ -2,7 +2,7 @@ window.onload = function() {
   // document.getElementById('Name').value = 'abcdefgK';
   document.getElementById("Finish").click();
   // document.getElementById('abcdefgK').remove();
-  document.getElementById("Link").focus();
+  document.getElementById("Date").focus();
 
 };
 

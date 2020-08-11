@@ -48,12 +48,6 @@ function filter(string) {
     given = given.slice(0, -3);
   }
 
-  // given = given.replace(new RegExp('.js', '$'), "");
-  // if (string.trim().substring(0, 11) == "javascript:") {
-  //
-  // } else {
-  //   var given = string;
-  // }
   var blackListedCharacters = ['>', '<', '"', "'", '`', ';'];
   var finished = given;
   for (character of blackListedCharacters) {
@@ -111,19 +105,6 @@ function changePrettyDate() {
   prettyDate.innerHTML = dateString;
 }
 
-
-
-// function getLastActiveTab() {
-//   chrome.tabs.query({
-//     active: true,
-//     highlighted: true
-//   }, tabs => {
-//     console.log(tabs);
-//     //Returns a 'tab' object
-//     return tabs[0];
-//   });
-// }
-// localStorage.clear();
 function changeTitle() {
   chrome.tabs.query({
     active: true,
@@ -371,10 +352,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
           var replaceHtml = current.replace(itemString, added);
           list.innerHTML = replaceHtml;
 
-          // var name = filter(document.getElementById("Name").value);
-          // document.getElementById(name).style.color = '#0a9c00';
-          // // document.getElementById("myDIV").style.transition = "all 0.35s";as
-          // setTimeout(function() {document.getElementById(name).style.color = '#000000'; localStorage.setItem('tasklist', list.innerHTML);}, 75);
           setVisualtoNormal();
           editingFlag = false;
         } else {
@@ -580,12 +557,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     localStorage.setItem('tasklist', list.innerHTML);
   });
 
-  // chrome.storage.local.get(['tasklist'], function(saved) {
-  //   if (saved.tasklist) {
-  //   	list.innerHTML = saved.tasklist;
-  //   }
-  //
-  // });
+
   if (localStorage.getItem('tasklist')) {
     list.innerHTML = localStorage.getItem('tasklist');
   }

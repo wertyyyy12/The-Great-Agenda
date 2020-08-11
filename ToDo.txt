@@ -7,5 +7,4 @@ XSS:
 filter urls ending in .js
 clean up character filtering code
 
-Fix on cancel bug of everything not resetting
 Block 2 submissions w/ same name

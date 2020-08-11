@@ -373,7 +373,18 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     cancel.addEventListener('click', function() {
       setVisualtoNormal();
-      setLinkToActiveTab();
+      chrome.tabs.query({
+        active: true,
+        highlighted: true
+      }, tabs => {
+        var url = tabs[0].url;
+        document.getElementById("Link").value = url;
+        // use `url` here inside the callback because it's asynchronous!
+      });
+      changeTitle();
+      document.getElementById("Date").valueAsDate = new Date();
+      changePrettyDate();
+      document.getElementById("Name").value = "";
       editingFlag = false;
     });
 

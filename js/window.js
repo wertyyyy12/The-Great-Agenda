@@ -296,7 +296,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   // var bg = 0; //A flag that tells us the color of the item BEFORE changes are made to the background color.
   form.addEventListener('submit', function(event) {
     event.preventDefault();
-    var name = filter(document.getElementById("Name").value);
+    var name = filter(document.getElementById("Name").value).trim();
     var date = document.getElementById("Date").value;
     //Date formatting
     var month = parseInt(date.slice(5, 7));
@@ -337,46 +337,60 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
       document.getElementById('Finish').innerHTML = 'Finish';
     }
-
-    if (name != '') { //EDIT: turns out ids CAN have spaces, u just have to put quotes around the id. Well guess what too bad I am so not going to go through the entire thing just to not okokokokokokok
-      if (isUrl(link) == false) {
-        //The class of the li element tells whether the li is 'marked' or not                                                                                      //inject date into id lol. ids cant have spaces so we replace the spaces with "ok", then we replace the oks with spaces again when we want to decode.
-        var added = '<li id=' + '"' + name + '">' + '<div class=item id=item>' + '<span id="nameBox">' + name + ': ' + '</span>' + '<label class=dateStr id="' + correctD + '">' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' + '&nbsp&nbsp' + '<button type=button class=edit>Edit</button>' + '&nbsp&nbsp' + '<button type=button class=mark>Mark</button>' + '<div>' + '</li>';
+    var duplicateName = false;
+    for (item of items) {
+      if (item.parentElement.id == name) {
+        duplicateName = true;
       } else {
-        var added = '<li id=' + '"' + name + '">' + '<div class=item id=item>' + '<span id="nameBox">' + '<a target="_blank" href=' + link + '>' + name + '</a>' + '</span>' + ': ' + '<label class=dateStr id="' + correctD + '">' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' + '&nbsp&nbsp' + '<button type=button class=edit>Edit</button>' + '&nbsp&nbsp' + '<button type=button class=mark>Mark</button>' + '<div>' + '</li>';
+        duplicateName = false;
       }
-
-      //Change innerhtml of mark button to 'unmark' if the button was previously marked before editingFlag
-      // console.log(itemChanged.children);
-      if (editingFlag == true) {
-        // document.getElementById(name).style.opacity = 0;
-        localStorage.setItem('tasklist', list.innerHTML);
-
-        if (checkIfMarked(Array.prototype.slice.call(itemChanged.children[0].children))) {
-          added = added.replace('<button type=button class=mark>Mark</button>', '<button type=button class=mark>Unmark</button>');
-          console.log(added);
-
+    }
+    if (name != '') { //EDIT: turns out ids CAN have spaces, u just have to put quotes around the id. Well guess what too bad I am so not going to go through the entire thing just to not okokokokokokok
+      if (!duplicateName) {
+        if (isUrl(link) == false) {
+          //The class of the li element tells whether the li is 'marked' or not                                                                                      //inject date into id lol. ids cant have spaces so we replace the spaces with "ok", then we replace the oks with spaces again when we want to decode.
+          var added = '<li id=' + '"' + name + '">' + '<div class=item id=item>' + '<span id="nameBox">' + name + ': ' + '</span>' + '<label class=dateStr id="' + correctD + '">' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' + '&nbsp&nbsp' + '<button type=button class=edit>Edit</button>' + '&nbsp&nbsp' + '<button type=button class=mark>Mark</button>' + '<div>' + '</li>';
+        } else {
+          var added = '<li id=' + '"' + name + '">' + '<div class=item id=item>' + '<span id="nameBox">' + '<a target="_blank" href=' + link + '>' + name + '</a>' + '</span>' + ': ' + '<label class=dateStr id="' + correctD + '">' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' + '&nbsp&nbsp' + '<button type=button class=edit>Edit</button>' + '&nbsp&nbsp' + '<button type=button class=mark>Mark</button>' + '<div>' + '</li>';
         }
 
-        var itemString = itemChanged.outerHTML;
-        var current = localStorage.getItem('tasklist');
-        var replaceHtml = current.replace(itemString, added);
-        list.innerHTML = replaceHtml;
+        //Change innerhtml of mark button to 'unmark' if the button was previously marked before editingFlag
+        // console.log(itemChanged.children);
+        if (editingFlag == true) {
+          // document.getElementById(name).style.opacity = 0;
+          localStorage.setItem('tasklist', list.innerHTML);
 
-        // var name = filter(document.getElementById("Name").value);
-        // document.getElementById(name).style.color = '#0a9c00';
-        // // document.getElementById("myDIV").style.transition = "all 0.35s";as
-        // setTimeout(function() {document.getElementById(name).style.color = '#000000'; localStorage.setItem('tasklist', list.innerHTML);}, 75);
-        setVisualtoNormal();
-        editingFlag = false;
+          if (checkIfMarked(Array.prototype.slice.call(itemChanged.children[0].children))) {
+            added = added.replace('<button type=button class=mark>Mark</button>', '<button type=button class=mark>Unmark</button>');
+            console.log(added);
+
+          }
+
+          var itemString = itemChanged.outerHTML;
+          var current = localStorage.getItem('tasklist');
+          var replaceHtml = current.replace(itemString, added);
+          list.innerHTML = replaceHtml;
+
+          // var name = filter(document.getElementById("Name").value);
+          // document.getElementById(name).style.color = '#0a9c00';
+          // // document.getElementById("myDIV").style.transition = "all 0.35s";as
+          // setTimeout(function() {document.getElementById(name).style.color = '#000000'; localStorage.setItem('tasklist', list.innerHTML);}, 75);
+          setVisualtoNormal();
+          editingFlag = false;
+        } else {
+          list.innerHTML += added;
+        }
+        document.getElementById("Name").value = "";
+        document.getElementById("Link").value = "";
+        document.getElementById("Link").focus();
+        resetForm();
       } else {
-        list.innerHTML += added;
+        document.getElementById("Name").style["border-bottom"] = "2px solid red";
+        setTimeout(function() {
+          document.getElementById("Name").style["border-bottom"] = "2px solid green";
+        }, 1000);
       }
-      document.getElementById("Name").value = "";
-      document.getElementById("Link").value = "";
-      document.getElementById("Link").focus();
-      resetForm();
-    }
+    } //her her her
 
 
     // localStorage.setItem('tasklist', list.innerHTML);

@@ -1,2 +1,4 @@
 -Put tasks that have a due date closer to the current date higher on the list (closed for now, too much effort for something insignificant)
 -Make option to set 1, 2, or no reminders for due dates. (low priority)
+
+-Allow assignments to be submitted w/o name but the name = title of link

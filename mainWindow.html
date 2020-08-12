@@ -198,6 +198,10 @@
       font-size: 17px;
       cursor: pointer;
     }
+
+    #Name {
+      border-bottom: 2px solid green;
+    }
   </style>
   <script type="text/javascript" src="js/window.js"></script>
   <script type="text/javascript" src="background.js"></script>
@@ -211,12 +215,13 @@
   <a class="help" href="help.html" target="_blank">Help Page</a>
   <br><br>
   <form id="aInfo">
+    Name: <input type="text" placeholder="Name of task" id="Name" autocomplete="off"><br><br>
+    Link: <input type="text" class="link" placeholder="Attach a link" id="Link" autocomplete="off" size='100'>&nbsp;
+    <div class="addend"><img id="FAVICON" alt=''>&nbsp;<label id="LinkLabel">ok</label></div><br><br>
     Date: <input class="input" type="date" id="Date">
     <div class="addend"><label for="Date" id="prettyDate"> </label></div><br>
-    Link: <input type="text" class="link" placeholder="Attach a link" id="Link" autocomplete="off" size='100'>&nbsp;
-    <div class="addend"><img id="FAVICON" alt=''>&nbsp;<label id="LinkLabel">ok</label></div>
-    <br><br> Name: <input type="text" placeholder="Name of task" id="Name" autocomplete="off"><br><br>
-    <button class="finish" type="submit" id="Finish">Finish</button>&nbsp;<button type="button" id="Cancel">Cancel</button>
+
+    <button class="finish" type="submit" id="DONEDONE">Finish</button>&nbsp;<button type="button" id="Cancel">Cancel</button>
 
   </form>
 

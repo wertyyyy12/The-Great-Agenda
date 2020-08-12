@@ -1,8 +1,22 @@
+// location.reload();
 window.onload = function() {
   // document.getElementById('Name').value = 'abcdefgK';
-  document.getElementById("Finish").click();
+  console.log("load");
+  // document.getElementById("aInfo").addEventListener('submit', function() {
+  //   event.preventDefault();
+  // });
+  // setTimeout(function() {
+  //   document.getElementById("aInfo").submit()
+  // }, 250);
+  document.getElementById("DONEDONE").click();
+  document.getElementById("Name").value = localStorage.getItem('nameField');
+  if (document.getElementById("Name").value == "") {
+    document.getElementById("Name").style["border-bottom"] = "2px solid red";
+  }
+  // document.getElementById("aInfo").submit();
+  console.log('otherload');
   // document.getElementById('abcdefgK').remove();
-  document.getElementById("Date").focus();
+  document.getElementById("Name").focus();
 
 };
 
@@ -150,6 +164,7 @@ function changeTitleExtUrl(url) {
           var favicon = "";
         }
         document.getElementById("FAVICON").setAttribute("src", favicon);
+        return title;
       }
     }
     xhr.send();
@@ -157,6 +172,7 @@ function changeTitleExtUrl(url) {
     document.getElementById("LinkLabel").innerHTML = "";
     document.getElementById("FAVICON").setAttribute("src", "");
   }
+
 
 
 }
@@ -200,7 +216,6 @@ function resetForm() {
 
 var activeTab = 0;
 document.addEventListener("DOMContentLoaded", function(event) {
-
   //Autofill url of open tab
   chrome.tabs.query({
     active: true,
@@ -247,6 +262,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
     } else {
       document.getElementById("Name").style["border-bottom"] = "2px solid green";
     }
+
+    localStorage.setItem('nameField', document.getElementById("Name").value);
   });
   document.getElementById("Date").addEventListener('change', changePrettyDate);
   document.getElementById("Link").addEventListener('change', function() {
@@ -316,7 +333,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
       // itemChanged.backgroundColor = '#ffffff';
       cancel.style.display = 'none';
 
-      document.getElementById('Finish').innerHTML = 'Finish';
+      document.getElementById('DONEDONE').innerHTML = 'Finish';
     }
     var duplicateName = false;
     for (item of items) {
@@ -368,6 +385,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
         }, 1000);
       }
     } //her her her
+    else {
+      if (link != "") {
+        // name =
+      }
+    }
 
 
     // localStorage.setItem('tasklist', list.innerHTML);
@@ -450,7 +472,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         // changePrettyDate();
 
         this.parentElement.style.backgroundColor = '#5af558';
-        document.getElementById('Finish').innerHTML = 'Finish Editing';
+        document.getElementById('DONEDONE').innerHTML = 'Finish Editing';
         editingFlag = true;
       });
     }

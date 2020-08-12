@@ -377,7 +377,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         }
         document.getElementById("Name").value = "";
         document.getElementById("Link").value = "";
-        document.getElementById("Link").focus();
+        document.getElementById("Name").focus();
         resetForm();
       } else {
         document.getElementById("Name").style["border-bottom"] = "2px solid red";

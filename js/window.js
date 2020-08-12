@@ -1,4 +1,4 @@
-// location.reload();
+var first = false;
 window.onload = function() {
   // document.getElementById('Name').value = 'abcdefgK';
   console.log("load");
@@ -8,6 +8,7 @@ window.onload = function() {
   // setTimeout(function() {
   //   document.getElementById("aInfo").submit()
   // }, 250);
+  first = true;
   document.getElementById("DONEDONE").click();
   document.getElementById("Name").value = localStorage.getItem('nameField');
   if (document.getElementById("Name").value == "") {
@@ -575,6 +576,15 @@ document.addEventListener("DOMContentLoaded", function(event) {
       });
     }
 
+    console.log(first);
+
+    if (!first) {
+      localStorage.setItem('nameField', '');
+    }
+
+    if (first) {
+      first = false;
+    }
     // chrome.storage.local.set({'tasklist': list.innerHTML});
     localStorage.setItem('tasklist', list.innerHTML);
   });

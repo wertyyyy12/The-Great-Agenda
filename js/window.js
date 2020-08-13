@@ -344,17 +344,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
       document.getElementById('DONEDONE').innerHTML = 'Finish';
     }
     var duplicateName = false;
-    // console.log(editingFlag);
-    // if (!editingFlag) {
-    //   //Reject this submission if the name is duplicated.
-    //   for (item of items) {
-    //     if (item.parentElement.id == name) {
-    //       duplicateName = true;
-    //     } else {
-    //       duplicateName = false;
-    //     }
-    //   }
-    // }
     if (name != '') { //EDIT: turns out ids CAN have spaces, u just have to put quotes around the id. Well guess what too bad I am so not going to go through the entire thing just to not okokokokokokok
       console.log(!duplicateName);
       if (isUrl(link) == false) {
@@ -387,15 +376,16 @@ document.addEventListener("DOMContentLoaded", function(event) {
       } else {
         list.innerHTML += added;
       }
+
+
       document.getElementById("Name").value = "";
       document.getElementById("Link").value = "";
       document.getElementById("Name").focus();
       resetForm();
-    } //her her her
-    else {
-      if (link != "") {
-        // name =
-      }
+    } else {
+      // if (link != "") {
+      //   // name =
+      // }
     }
 
 
@@ -541,6 +531,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     }
 
+
     //Hide right click contextmenu so that right click scrolling is actually usable.
     document.addEventListener('contextmenu', event => event.preventDefault());
 
@@ -556,14 +547,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
         if (event.button == 2) {
           if (scroll == splits) {
             window.scrollTo({
-              top: 0,
+              top: window.scrollY,
               left: 0,
               behavior: 'smooth'
             });
             scroll = 0;
           } else {
             window.scrollTo({
-              top: 0,
+              top: window.scrollY,
               left: window.scrollX + (width / splits),
               behavior: 'smooth'
             });
@@ -571,7 +562,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
           }
           if (window.scrollX >= width) {
             window.scrollTo({
-              top: 0,
+              top: window.scrollY,
               left: 0,
               behavior: 'smooth'
             });

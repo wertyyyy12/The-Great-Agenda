@@ -1,4 +1,6 @@
--Put tasks that have a due date closer to the current date higher on the list (closed for now, too much effort for something insignificant)
+-Put tasks that have a due date closer to the current date higher on the list (high priority)
 -Make option to set 1, 2, or no reminders for due dates. (low priority)
 
+-Fix finish edit button not working
 -Allow assignments to be submitted w/o name but the name = title of link
+-Make test branch

@@ -151,24 +151,31 @@ function changeTitleExtUrl(url) {
   document.getElementById("FAVICON").setAttribute("src", "");
 
   if (url != "") {
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", url, true); //Async as shown by last parameter
-    xhr.onreadystatechange = function() {
-      if (xhr.readyState == 4) { //check if status == complete
-        var htmlResponse = xhr.responseText;
+    try {
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", url, true); //Async as shown by last parameter
 
-        var title = filter(htmlResponse.match("<title>(.*?)</title>")[1]);
-        document.getElementById("LinkLabel").innerHTML = title;
-        if (url != "") {
-          var favicon = "https://s2.googleusercontent.com/s2/favicons?domain_url=" + url;
-        } else {
-          var favicon = "";
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4) { //check if status == complete
+          var htmlResponse = xhr.responseText;
+
+          var title = filter(htmlResponse.match("<title>(.*?)</title>")[1]);
+          document.getElementById("LinkLabel").innerHTML = title;
+          if (url != "") {
+            var favicon = "https://s2.googleusercontent.com/s2/favicons?domain_url=" + url;
+          } else {
+            var favicon = "";
+          }
+          document.getElementById("FAVICON").setAttribute("src", favicon);
+          return title;
         }
-        document.getElementById("FAVICON").setAttribute("src", favicon);
-        return title;
       }
+      xhr.send();
+    } catch {
+      document.getElementById("LinkLabel").innerHTML = url;
+      document.getElementById("FAVICON").setAttribute("src", "");
     }
-    xhr.send();
+
   } else {
     document.getElementById("LinkLabel").innerHTML = "";
     document.getElementById("FAVICON").setAttribute("src", "");
@@ -337,54 +344,53 @@ document.addEventListener("DOMContentLoaded", function(event) {
       document.getElementById('DONEDONE').innerHTML = 'Finish';
     }
     var duplicateName = false;
-    for (item of items) {
-      if (item.parentElement.id == name) {
-        duplicateName = true;
-      } else {
-        duplicateName = false;
-      }
-    }
+    // console.log(editingFlag);
+    // if (!editingFlag) {
+    //   //Reject this submission if the name is duplicated.
+    //   for (item of items) {
+    //     if (item.parentElement.id == name) {
+    //       duplicateName = true;
+    //     } else {
+    //       duplicateName = false;
+    //     }
+    //   }
+    // }
     if (name != '') { //EDIT: turns out ids CAN have spaces, u just have to put quotes around the id. Well guess what too bad I am so not going to go through the entire thing just to not okokokokokokok
-      if (!duplicateName) {
-        if (isUrl(link) == false) {
-          //The class of the li element tells whether the li is 'marked' or not                                                                                      //inject date into id lol. ids cant have spaces so we replace the spaces with "ok", then we replace the oks with spaces again when we want to decode.
-          var added = '<li id=' + '"' + name + '">' + '<div class=item id=item>' + '<span id="nameBox">' + name + ': ' + '</span>' + '<label class=dateStr id="' + correctD + '">' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' + '&nbsp&nbsp' + '<button type=button class=edit>Edit</button>' + '&nbsp&nbsp' + '<button type=button class=mark>Mark</button>' + '<div>' + '</li>';
-        } else {
-          var added = '<li id=' + '"' + name + '">' + '<div class=item id=item>' + '<span id="nameBox">' + '<a target="_blank" href=' + link + '>' + name + '</a>' + '</span>' + ': ' + '<label class=dateStr id="' + correctD + '">' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' + '&nbsp&nbsp' + '<button type=button class=edit>Edit</button>' + '&nbsp&nbsp' + '<button type=button class=mark>Mark</button>' + '<div>' + '</li>';
-        }
-
-        //Change innerhtml of mark button to 'unmark' if the button was previously marked before editingFlag
-        // console.log(itemChanged.children);
-        if (editingFlag == true) {
-          // document.getElementById(name).style.opacity = 0;
-          localStorage.setItem('tasklist', list.innerHTML);
-
-          if (checkIfMarked(Array.prototype.slice.call(itemChanged.children[0].children))) {
-            added = added.replace('<button type=button class=mark>Mark</button>', '<button type=button class=mark>Unmark</button>');
-            console.log(added);
-
-          }
-
-          var itemString = itemChanged.outerHTML;
-          var current = localStorage.getItem('tasklist');
-          var replaceHtml = current.replace(itemString, added);
-          list.innerHTML = replaceHtml;
-
-          setVisualtoNormal();
-          editingFlag = false;
-        } else {
-          list.innerHTML += added;
-        }
-        document.getElementById("Name").value = "";
-        document.getElementById("Link").value = "";
-        document.getElementById("Name").focus();
-        resetForm();
+      console.log(!duplicateName);
+      if (isUrl(link) == false) {
+        //The class of the li element tells whether the li is 'marked' or not                                                                                      //inject date into id lol. ids cant have spaces so we replace the spaces with "ok", then we replace the oks with spaces again when we want to decode.
+        var added = '<li id=' + '"' + name + '">' + '<div class=item id=item>' + '<span id="nameBox">' + name + ': ' + '</span>' + '<label class=dateStr id="' + correctD + '">' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' + '&nbsp&nbsp' + '<button type=button class=edit>Edit</button>' + '&nbsp&nbsp' + '<button type=button class=mark>Mark</button>' + '<div>' + '</li>';
       } else {
-        document.getElementById("Name").style["border-bottom"] = "2px solid red";
-        setTimeout(function() {
-          document.getElementById("Name").style["border-bottom"] = "2px solid green";
-        }, 1000);
+        var added = '<li id=' + '"' + name + '">' + '<div class=item id=item>' + '<span id="nameBox">' + '<a target="_blank" href=' + link + '>' + name + '</a>' + '</span>' + ': ' + '<label class=dateStr id="' + correctD + '">' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' + '&nbsp&nbsp' + '<button type=button class=edit>Edit</button>' + '&nbsp&nbsp' + '<button type=button class=mark>Mark</button>' + '<div>' + '</li>';
       }
+
+      //Change innerhtml of mark button to 'unmark' if the button was previously marked before editingFlag
+      // console.log(itemChanged.children);
+      if (editingFlag == true) {
+        console.log('ok boomer');
+        // document.getElementById(name).style.opacity = 0;
+        localStorage.setItem('tasklist', list.innerHTML);
+
+        if (checkIfMarked(Array.prototype.slice.call(itemChanged.children[0].children))) {
+          added = added.replace('<button type=button class=mark>Mark</button>', '<button type=button class=mark>Unmark</button>');
+          console.log(added);
+
+        }
+
+        var itemString = itemChanged.outerHTML;
+        var current = localStorage.getItem('tasklist');
+        var replaceHtml = current.replace(itemString, added);
+        list.innerHTML = replaceHtml;
+
+        setVisualtoNormal();
+        editingFlag = false;
+      } else {
+        list.innerHTML += added;
+      }
+      document.getElementById("Name").value = "";
+      document.getElementById("Link").value = "";
+      document.getElementById("Name").focus();
+      resetForm();
     } //her her her
     else {
       if (link != "") {

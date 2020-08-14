@@ -583,14 +583,19 @@ document.addEventListener("DOMContentLoaded", function(event) {
       });
     }
 
+    //PSEUDOCODE:
+    //1. Loop through all assignments
+    //2. Find earliest due date
+    //3. Move this to top
+    //4. Take out this one from the loop array
+    //5. Repeat above until done (repeat as many items as there are items)
     var itemsAsArray = Array.prototype.slice.call(items);
     var listItems = Array.prototype.slice.call(document.getElementsByTagName("li"));
     var top = 0;
-    var globalIndex = 0;
-    itemsAsArray.forEach(function(index) {
+    itemsAsArray.forEach(function(index) { //step 5
       var minRemainingDays = 999999999999999999999999999999999999999999999999999999;
       var minElement = 0;
-      listItems.forEach(function(item, index) {
+      listItems.forEach(function(item, index) { //step 1, this is loop for finding step 2
         var today = new Date();
         var dateInfo = dates[index].id;
         // var dateInfo = originalID; //.replace(/ok/g, ' ');
@@ -601,19 +606,21 @@ document.addEventListener("DOMContentLoaded", function(event) {
           console.log(remainingDays);
           minRemainingDays = remainingDays;
           minElement = listItems[index];
-          globalIndex = index;
         }
       });
-      // console.log(minElement.parentNode.parentNode);
-      // minElement.parentNode.parentNode.insertBefore(minElement.parentNode, items[top].parentElement);
-      console.log(minElement);
-      console.log(document.getElementById("taskList"));
-      console.log(listItems.indexOf(minElement));
+
+
+      // console.log(minElement);
+      // console.log(document.getElementById("taskList"));
+      // console.log(listItems.indexOf(minElement));
+
+      //We finished step 2, now do step 3
+      //Since this is inside another for loop, we repeat this as necessary.
       document.getElementById("taskList").appendChild(minElement);
 
-      // top = top + 1;
+
       var removeIndex = listItems.indexOf(minElement);
-      listItems = listItems.filter(item => item !== minElement);
+      listItems = listItems.filter(item => item !== minElement); //step 4
       console.log(listItems);
     });
 

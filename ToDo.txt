@@ -2,3 +2,10 @@
 -Make option to set 1, 2, or no reminders for due dates. (low priority)
 
 -Allow assignments to be submitted w/o name but the name = title of link (medium priority)
+
+Loop through all assignments
+Find earliest due date
+Move this to top
+Set "top" to 1 down
+Take out this one from the loop array
+Repeat above until done

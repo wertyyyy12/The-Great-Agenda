@@ -470,6 +470,16 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
         this.parentElement.style.backgroundColor = '#5af558';
         document.getElementById('DONEDONE').innerHTML = 'Finish Editing';
+
+        document.getElementById('Name').focus();
+        var val = document.getElementById('Name').value;
+        document.getElementById('Name').value = val;
+
+        window.scrollTo({
+          top: document.body.scrollHeight,
+          left: 0,
+          behavior: 'smooth'
+        });
         editingFlag = true;
       });
     }
@@ -573,7 +583,43 @@ document.addEventListener("DOMContentLoaded", function(event) {
       });
     }
 
-    console.log(first);
+    var itemsAsArray = Array.prototype.slice.call(items);
+    var listItems = Array.prototype.slice.call(document.getElementsByTagName("li"));
+    var top = 0;
+    var globalIndex = 0;
+    itemsAsArray.forEach(function(index) {
+      var minRemainingDays = 999999999999999999999999999999999999999999999999999999;
+      var minElement = 0;
+      listItems.forEach(function(item, index) {
+        var today = new Date();
+        var dateInfo = dates[index].id;
+        // var dateInfo = originalID; //.replace(/ok/g, ' ');
+        var storedDate = new Date(dateInfo);
+        remainingDays = dateDiffInDays(today, storedDate);
+        if (remainingDays <= minRemainingDays) {
+          console.log(minRemainingDays);
+          console.log(remainingDays);
+          minRemainingDays = remainingDays;
+          minElement = listItems[index];
+          globalIndex = index;
+        }
+      });
+      // console.log(minElement.parentNode.parentNode);
+      // minElement.parentNode.parentNode.insertBefore(minElement.parentNode, items[top].parentElement);
+      console.log(minElement);
+      console.log(document.getElementById("taskList"));
+      console.log(listItems.indexOf(minElement));
+      // document.getElementById("taskList").appendChild(minElement);
+
+      // top = top + 1;
+      var removeIndex = listItems.indexOf(minElement);
+      listItems = listItems.filter(item => item !== minElement)
+      console.log(listItems);
+    });
+
+
+
+    // console.log(first);
 
     if (!first) {
       localStorage.setItem('nameField', '');

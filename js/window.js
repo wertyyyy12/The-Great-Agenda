@@ -609,11 +609,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
       console.log(minElement);
       console.log(document.getElementById("taskList"));
       console.log(listItems.indexOf(minElement));
-      // document.getElementById("taskList").appendChild(minElement);
+      document.getElementById("taskList").appendChild(minElement);
 
       // top = top + 1;
       var removeIndex = listItems.indexOf(minElement);
-      listItems = listItems.filter(item => item !== minElement)
+      listItems = listItems.filter(item => item !== minElement);
       console.log(listItems);
     });
 

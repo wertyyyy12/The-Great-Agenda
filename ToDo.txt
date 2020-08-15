@@ -1,4 +1,5 @@
 -Make option to set 1, 2, or no reminders for due dates. (low priority)
 
 -Allow assignments to be submitted w/o name but the name = title of link (medium priority)
--Scroll to top upon assignment submission
+-Make a box around the list items
+-Use jQuery highlight effect to highlight edited and newly added assignments

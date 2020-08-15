@@ -198,7 +198,7 @@ function dateDiffInDays(a, b) {
 function checkIfMarked(listChildren) {
   var marked = false;
   listChildren.forEach(function(child) {
-    if (child.innerHTML == 'Unmark') {
+    if (child.innerHTML == 'Erase Highlight') {
       marked = true;
     }
   });
@@ -335,7 +335,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
             item.style.backgroundColor = '#ffffff';
             break;
           case true:
-            item.style.backgroundColor = '#00f2ce';
+            item.style.backgroundColor = 'yellow';
         }
       });
       // console.log(itemChanged);
@@ -349,9 +349,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
       console.log(!duplicateName);
       if (isUrl(link) == false) {
         //The class of the li element tells whether the li is 'marked' or not                                                                                      //inject date into id lol. ids cant have spaces so we replace the spaces with "ok", then we replace the oks with spaces again when we want to decode.
-        var added = '<li id=' + '"' + name + '">' + '<div class=item id=item>' + '<span id="nameBox">' + name + ': ' + '</span>' + '<label class=dateStr id="' + correctD + '">' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'Delete' + '</button>' + '&nbsp&nbsp' + '<button type=button class=edit>Edit</button>' + '&nbsp&nbsp' + '<button type=button class=mark>Mark</button>' + '<div>' + '</li>';
+        var added = '<li id=' + '"' + name + '">' + '<div class=item id=item>' + '<span id="nameBox">' + name + ': ' + '</span>' + '<label class=dateStr id="' + correctD + '">' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'Delete' + '</button>' + '&nbsp&nbsp' + '<button type=button class=edit>Edit</button>' + '&nbsp&nbsp' + '<button type=button class=mark>Highlight</button>' + '<div>' + '</li>';
       } else {
-        var added = '<li id=' + '"' + name + '">' + '<div class=item id=item>' + '<span id="nameBox">' + '<a target="_blank" href=' + link + '>' + name + '</a>' + '</span>' + ': ' + '<label class=dateStr id="' + correctD + '">' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'Delete' + '</button>' + '&nbsp&nbsp' + '<button type=button class=edit>Edit</button>' + '&nbsp&nbsp' + '<button type=button class=mark>Mark</button>' + '<div>' + '</li>';
+        var added = '<li id=' + '"' + name + '">' + '<div class=item id=item>' + '<span id="nameBox">' + '<a target="_blank" href=' + link + '>' + name + '</a>' + '</span>' + ': ' + '<label class=dateStr id="' + correctD + '">' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'Delete' + '</button>' + '&nbsp&nbsp' + '<button type=button class=edit>Edit</button>' + '&nbsp&nbsp' + '<button type=button class=mark>Highlight</button>' + '<div>' + '</li>';
       }
 
       //Change innerhtml of mark button to 'unmark' if the button was previously marked before editingFlag
@@ -362,7 +362,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         localStorage.setItem('tasklist', list.innerHTML);
 
         if (checkIfMarked(Array.prototype.slice.call(itemChanged.children[0].children))) {
-          added = added.replace('<button type=button class=mark>Mark</button>', '<button type=button class=mark>Unmark</button>');
+          added = added.replace('<button type=button class=mark>Highlight</button>', '<button type=button class=mark>Erase Highlight</button>');
           console.log(added);
 
         }
@@ -374,6 +374,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
         setVisualtoNormal();
         editingFlag = false;
+        //scroll to top
+        window.scrollTo({
+          top: 0,
+          left: 0,
+          behavior: 'smooth'
+        });
       } else {
         list.innerHTML += added;
       }
@@ -495,13 +501,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
         //We use the buttons innerHTML property as our boolean flag.
 
         switch (this.innerHTML) {
-          case 'Mark':
-            this.parentElement.style.backgroundColor = '#00f2ce';
-            this.innerHTML = 'Unmark';
+          case 'Highlight':
+            this.parentElement.style.backgroundColor = 'yellow';
+            this.innerHTML = 'Erase Highlight';
             break;
-          case 'Unmark':
+          case 'Erase Highlight':
             this.parentElement.style.backgroundColor = '#ffffff';
-            this.innerHTML = 'Mark';
+            this.innerHTML = 'Highlight';
         }
         console.log(this.parentElement.parentElement.class);
         console.log(this.parentElement.parentElement);

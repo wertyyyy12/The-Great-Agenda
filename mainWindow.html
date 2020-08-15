@@ -109,7 +109,7 @@
     }
 
     h1 {
-      margin-bottom: 2px;
+      margin-bottom: 0px;
     }
 
     a.help {
@@ -145,11 +145,11 @@
     .finish:hover {
       background-color: #4CAF50;
       color: white;
-      box-shadow: 5px 5px 5px grey;
+      box-shadow: 3px 3px 3px grey;
     }
 
     .mark:hover {
-      background-color: #0020bf;
+      background-color: #ffc800;
       color: white;
       box-shadow: 2px 2px 2px grey;
     }
@@ -211,8 +211,8 @@
       visibility: hidden;
       border-radius: 6px;
       background-color: #ffffff;
-      border: 2px solid #0020bf;
-      color: #0020bf;
+      border: 2px solid #ffc800;
+      color: #ffc800;
       text-align: center;
       text-decoration: none;
       opacity: 0;
@@ -231,14 +231,31 @@
 
     #shadowBox {
       padding: 5px;
-      border: 1px solid grey;
+      border: 1px solid DarkRed;
       width: 630px;
-      box-shadow: 5px 5px 5px grey;
       margin-top: -20px;
+      transition-duration: 0.35s;
+    }
+
+    #shadowBox:hover {
+      box-shadow: 7px 7px 7px grey;
     }
 
     #Date {
       width: 125px;
+    }
+
+    #taskListBox {
+      border: 1px solid green;
+      transition-duration: 0.35s;
+    }
+
+    #taskListBox:hover {
+      box-shadow: 7px 7px 7px grey;
+    }
+
+    #HelpPage {
+      margin-bottom: 15px;
     }
   </style>
   <script type="text/javascript" src="js/window.js"></script>
@@ -247,10 +264,12 @@
 
 <body>
   <h1>The Agenda</h1>
-  <a class="help" href="help.html" target="_blank">Help Page</a>
+  <div id="HelpPage"><a class="help" href="help.html" target="_blank">Help Page</a></div>
   <h2 id="editLabel">(Editing)</h2>
-  <ul id="taskList"></ul>
-  <hr>
+  <div id="taskListBox">
+    <ul id="taskList"></ul>
+  </div>
+  <!-- <hr> -->
 
   <br><br>
   <div id="shadowBox">

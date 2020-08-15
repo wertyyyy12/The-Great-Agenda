@@ -19,6 +19,7 @@ window.onload = function() {
   // document.getElementById('abcdefgK').remove();
   document.getElementById("Name").focus();
 
+
 };
 
 
@@ -341,16 +342,16 @@ document.addEventListener("DOMContentLoaded", function(event) {
       // itemChanged.backgroundColor = '#ffffff';
       cancel.style.display = 'none';
 
-      document.getElementById('DONEDONE').innerHTML = 'Finish';
+      document.getElementById('DONEDONE').innerHTML = 'Create';
     }
     var duplicateName = false;
     if (name != '') { //EDIT: turns out ids CAN have spaces, u just have to put quotes around the id. Well guess what too bad I am so not going to go through the entire thing just to not okokokokokokok
       console.log(!duplicateName);
       if (isUrl(link) == false) {
         //The class of the li element tells whether the li is 'marked' or not                                                                                      //inject date into id lol. ids cant have spaces so we replace the spaces with "ok", then we replace the oks with spaces again when we want to decode.
-        var added = '<li id=' + '"' + name + '">' + '<div class=item id=item>' + '<span id="nameBox">' + name + ': ' + '</span>' + '<label class=dateStr id="' + correctD + '">' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' + '&nbsp&nbsp' + '<button type=button class=edit>Edit</button>' + '&nbsp&nbsp' + '<button type=button class=mark>Mark</button>' + '<div>' + '</li>';
+        var added = '<li id=' + '"' + name + '">' + '<div class=item id=item>' + '<span id="nameBox">' + name + ': ' + '</span>' + '<label class=dateStr id="' + correctD + '">' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'Delete' + '</button>' + '&nbsp&nbsp' + '<button type=button class=edit>Edit</button>' + '&nbsp&nbsp' + '<button type=button class=mark>Mark</button>' + '<div>' + '</li>';
       } else {
-        var added = '<li id=' + '"' + name + '">' + '<div class=item id=item>' + '<span id="nameBox">' + '<a target="_blank" href=' + link + '>' + name + '</a>' + '</span>' + ': ' + '<label class=dateStr id="' + correctD + '">' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'X' + '</button>' + '&nbsp&nbsp' + '<button type=button class=edit>Edit</button>' + '&nbsp&nbsp' + '<button type=button class=mark>Mark</button>' + '<div>' + '</li>';
+        var added = '<li id=' + '"' + name + '">' + '<div class=item id=item>' + '<span id="nameBox">' + '<a target="_blank" href=' + link + '>' + name + '</a>' + '</span>' + ': ' + '<label class=dateStr id="' + correctD + '">' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'Delete' + '</button>' + '&nbsp&nbsp' + '<button type=button class=edit>Edit</button>' + '&nbsp&nbsp' + '<button type=button class=mark>Mark</button>' + '<div>' + '</li>';
       }
 
       //Change innerhtml of mark button to 'unmark' if the button was previously marked before editingFlag
@@ -469,7 +470,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         // changePrettyDate();
 
         this.parentElement.style.backgroundColor = '#5af558';
-        document.getElementById('DONEDONE').innerHTML = 'Finish Editing';
+        document.getElementById('DONEDONE').innerHTML = 'Save';
 
         document.getElementById('Name').focus();
         var val = document.getElementById('Name').value;
@@ -602,8 +603,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
         var storedDate = new Date(dateInfo);
         remainingDays = dateDiffInDays(today, storedDate);
         if (remainingDays <= minRemainingDays) {
-          console.log(minRemainingDays);
-          console.log(remainingDays);
+          // console.log(minRemainingDays);
+          // console.log(remainingDays);
           minRemainingDays = remainingDays;
           minElement = listItems[index];
         }

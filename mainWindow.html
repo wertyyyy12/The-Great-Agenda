@@ -43,6 +43,7 @@
     .link {
       margin-bottom: 10px;
       font-size: 10px;
+      /* width: 30%; */
     }
 
     .InfoLabel {
@@ -55,6 +56,7 @@
 
     #item:hover {
       background-color: #29d6cb !important;
+      box-shadow: 4px 4px 4px grey;
     }
 
     #item:hover>.edit {
@@ -73,7 +75,7 @@
     }
 
     #item {
-      transition-duration: 0.35s;
+      transition-duration: 0.45s;
       /* transition: visibility 0s, background-color 0.35s linear; */
     }
 
@@ -95,6 +97,7 @@
       font-size: 20px;
       margin: 4px 2px;
       cursor: pointer;
+      transition-duration: 0.35s;
     }
 
     a:visited {
@@ -105,8 +108,13 @@
       color: blue;
     }
 
+    h1 {
+      margin-bottom: 2px;
+    }
+
     a.help {
       font-size: 10px;
+      color: #000000;
     }
 
     .help {
@@ -125,26 +133,31 @@
       transition: visibility 0s, opacity 0.35s linear;
       font-size: 17px;
       cursor: pointer;
+
     }
 
     .Remove:hover {
       background-color: #FF0000;
       color: white;
+      box-shadow: 2px 2px 2px grey;
     }
 
     .finish:hover {
       background-color: #4CAF50;
       color: white;
+      box-shadow: 5px 5px 5px grey;
     }
 
     .mark:hover {
       background-color: #0020bf;
       color: white;
+      box-shadow: 2px 2px 2px grey;
     }
 
     .edit:hover {
       background-color: #29d6cb;
       color: white;
+      box-shadow: 2px 2px 2px grey;
     }
 
     #LinkLabel {
@@ -161,6 +174,7 @@
       border: none;
       outline: none;
       border-bottom: 2px solid green;
+      width: 80%;
     }
 
     input:focus {
@@ -212,7 +226,19 @@
     }
 
     div.addend {
-      text-indent: 4.5%
+      text-indent: 8.5%;
+    }
+
+    #shadowBox {
+      padding: 5px;
+      border: 1px solid grey;
+      width: 630px;
+      box-shadow: 5px 5px 5px grey;
+      margin-top: -20px;
+    }
+
+    #Date {
+      width: 125px;
     }
   </style>
   <script type="text/javascript" src="js/window.js"></script>
@@ -221,22 +247,25 @@
 
 <body>
   <h1>The Agenda</h1>
+  <a class="help" href="help.html" target="_blank">Help Page</a>
   <h2 id="editLabel">(Editing)</h2>
   <ul id="taskList"></ul>
   <hr>
-  <a class="help" href="help.html" target="_blank">Help Page</a>
+
   <br><br>
-  <form id="aInfo">
-    <label class="InfoLabel">Name: </label><input class="input" type="text" placeholder="Name of task" id="Name" autocomplete="off"><br><br>
-    <label class="InfoLabel">Date: </label><input class="input" type="date" id="Date">
-    <div class="addend"><label for="Date" id="prettyDate"> </label></div><br><br>
-    <label class="InfoLabel">Link: </label><input type="text" class="link" placeholder="Attach a link" id="Link" autocomplete="off" size='100'>&nbsp;
-    <div class="addend"><img id="FAVICON" alt=''>&nbsp;<label id="LinkLabel">ok</label></div><br>
+  <div id="shadowBox">
+    <form id="aInfo">
+      <label class="InfoLabel">Name: </label><input class="input" type="text" placeholder="Name of task" id="Name" autocomplete="off"><br><br>
+      <label class="InfoLabel">Date: </label><input class="input" type="date" id="Date">
+      <div class="addend"><label for="Date" id="prettyDate"> </label></div><br><br>
+      <label class="InfoLabel">Link: </label><input type="text" class="link" placeholder="Attach a link" id="Link" autocomplete="off" size='100'>&nbsp;
+      <div class="addend"><img id="FAVICON" alt=''>&nbsp;<label id="LinkLabel">ok</label></div><br>
 
 
-    <button class="finish" type="submit" id="DONEDONE">Create</button>&nbsp;<button type="button" id="Cancel">Cancel</button>
+      <button class="finish" type="submit" id="DONEDONE">Create</button>&nbsp;<button type="button" id="Cancel">Cancel</button>
 
-  </form>
+    </form>
+  </div>
 
 
 </body>

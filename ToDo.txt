@@ -1,7 +1,4 @@
 -Make option to set 1, 2, or no reminders for due dates. (low priority)
 
 -Allow assignments to be submitted w/o name but the name = title of link (medium priority)
--Indent pretty date/link labels
--Make "shadow card" for entry info
--Change color for help page link
 -Scroll to top upon assignment submission

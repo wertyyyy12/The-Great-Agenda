@@ -11,7 +11,7 @@
 -Update fonts
 -Add notebook page theme for info collection?
 -Make the heading fixed?
-
+-Add date number to pretty date under date field
 
 
 

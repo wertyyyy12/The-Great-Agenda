@@ -119,7 +119,8 @@ function changePrettyDate() {
   // var d = new Date(document.getElementById("Date").value);
   date = getMDY(date);
   var correctD = new Date(Date.UTC(date.year, date.month - 1, date.day + 1));
-  var dateString = days[correctD.getDay()] + ", " + months[date.month] + " " + date.day + " ";
+  // var dateString = days[correctD.getDay()] + ", " + months[date.month] + " " + date.day + " ";
+  var dateString = `${days[correctD.getDay()]}, ${months[date.month]} ${date.day} `
   prettyDate.innerHTML = dateString;
 }
 
@@ -140,7 +141,8 @@ function changeTitle() {
     }
     document.getElementById("LinkLabel").innerHTML = filter(title);
     if (url != "") {
-      var favicon = "https://s2.googleusercontent.com/s2/favicons?domain_url=" + url;
+      // var favicon = "https://s2.googleusercontent.com/s2/favicons?domain_url=" + url;
+      var favicon = `https://s2.googleusercontent.com/s2/favicons?domain_url=${url}`
     } else {
       var favicon = "";
     }
@@ -165,7 +167,8 @@ function changeTitleExtUrl(url) {
           var title = filter(htmlResponse.match("<title>(.*?)</title>")[1]);
           document.getElementById("LinkLabel").innerHTML = title;
           if (url != "") {
-            var favicon = "https://s2.googleusercontent.com/s2/favicons?domain_url=" + url;
+            // var favicon = "https://s2.googleusercontent.com/s2/favicons?domain_url=" + url;
+            var favicon = `https://s2.googleusercontent.com/s2/favicons?domain_url=${url}`
           } else {
             var favicon = "";
           }
@@ -319,7 +322,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
     var day = parseInt(date.slice(8, 10));
     var year = parseInt(date.slice(0, 4));
     var correctD = new Date(Date.UTC(year, month - 1, day + 1));
-    var dateString = days[correctD.getDay()] + ", " + months[month] + " " + day + " ";
+    // var dateString = days[correctD.getDay()] + ", " + months[month] + " " + day + " ";
+    var dateString = `${days[correctD.getDay()]}, ${months[month]} ${day} `;
     var link = document.getElementById("Link").value;
     var items = document.getElementsByClassName('item');
     var textBoxes = [document.getElementById('Link'), document.getElementById('Date'), document.getElementById('Name')];
@@ -358,9 +362,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
       console.log(!duplicateName);
       if (isUrl(link) == false) {
         //The class of the li element tells whether the li is 'marked' or not                                                                                      //inject date into id lol. ids cant have spaces so we replace the spaces with "ok", then we replace the oks with spaces again when we want to decode.
-        var added = '<li id=' + '"' + name + '">' + '<div class=item id=item>' + '<span id="nameBox">' + name + ': ' + '</span>' + '<label class=dateStr id="' + correctD + '">' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'Delete' + '</button>' + '&nbsp&nbsp' + '<button type=button class=edit>Edit</button>' + '&nbsp&nbsp' + '<button type=button class=mark>Highlight</button>' + '<div>' + '</li>';
+        // var added = '<li id=' + '"' + name + '">' + '<div class=item id=item>' + '<span id="nameBox">' + name + ': ' + '</span>' + '<label class=dateStr id="' + correctD + '">' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'Delete' + '</button>' + '&nbsp&nbsp' + '<button type=button class=edit>Edit</button>' + '&nbsp&nbsp' + '<button type=button class=mark>Highlight</button>' + '<div>' + '</li>';
+        var added = `<li id="${name}"><div class="item" id="item"><span id="nameBox">${name}: </span><label class="dateStr" id="${correctD}">${dateString}</label><strong>(<label class=daysTill></label>)</strong>&nbsp<button type=button class=Remove id=${name}>Delete</button>&nbsp&nbsp<button type=button class=edit>Edit</button>&nbsp&nbsp<button type=button class=mark>Highlight</button><div></li>`
       } else {
-        var added = '<li id=' + '"' + name + '">' + '<div class=item id=item>' + '<span id="nameBox">' + '<a target="_blank" href=' + link + '>' + name + '</a>' + '</span>' + ': ' + '<label class=dateStr id="' + correctD + '">' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'Delete' + '</button>' + '&nbsp&nbsp' + '<button type=button class=edit>Edit</button>' + '&nbsp&nbsp' + '<button type=button class=mark>Highlight</button>' + '<div>' + '</li>';
+        // var added = '<li id=' + '"' + name + '">' + '<div class=item id=item>' + '<span id="nameBox">' + '<a target="_blank" href=' + link + '>' + name + '</a>' + '</span>' + ': ' + '<label class=dateStr id="' + correctD + '">' + dateString + '</label>' + '<strong>(<label class=daysTill>' + '</label>)</strong>' + '&nbsp' + '<button type=button class=Remove id=' + name + '>' + 'Delete' + '</button>' + '&nbsp&nbsp' + '<button type=button class=edit>Edit</button>' + '&nbsp&nbsp' + '<button type=button class=mark>Highlight</button>' + '<div>' + '</li>';
+
+        var added = `<li id="${name}"><div class="item" id="item"><span id="nameBox"><a target="_blank" href="${link}">${name}</a></span>: <label class="dateStr" id="${correctD}">${dateString}</label><strong>(<label class="daysTill"></label>)</strong>&nbsp<button type="button" class="Remove" id="${name}">Delete</button>&nbsp&nbsp<button type="button" class="edit">Edit</button>&nbsp&nbsp<button type="button" class="mark">Highlight</button><div></li>`
       }
 
       //Change innerhtml of mark button to 'unmark' if the button was previously marked before editingFlag

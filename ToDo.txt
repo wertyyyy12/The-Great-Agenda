@@ -1,5 +1,23 @@
 -Make option to set 1, 2, or no reminders for due dates. (low priority)
 
 -Allow assignments to be submitted w/o name but the name = title of link (medium priority)
--Make a box around the list items
+
 -Use jQuery highlight effect to highlight edited and newly added assignments
+-Use template literals to clean up string code
+-Fix body box overflow bug
+-Backspace to delete an assignment, space to edit it, tab to mark it??
+-Make it to a table layout
+  -Overflow to next line
+-Update fonts
+-Add notebook page theme for info collection?
+-Make the heading fixed?
+
+
+
+
+
+
+
+
+
+-Make a box around the list items

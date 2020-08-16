@@ -20,6 +20,8 @@ window.onload = function() {
   document.getElementById("Name").focus();
 
 
+
+
 };
 
 
@@ -268,6 +270,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   document.getElementById("Name").addEventListener("change", function() {
     if (document.getElementById("Name").value == "") {
       document.getElementById("Name").style["border-bottom"] = "2px solid red";
+      document.getElementById("Name").value = document.getElementById("LinkLabel").innerHTML;
     } else {
       document.getElementById("Name").style["border-bottom"] = "2px solid green";
     }
@@ -289,6 +292,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
       } else {
         console.log('ext;')
         changeTitleExtUrl(document.getElementById("Link").value);
+      }
+
+      if (document.getElementById("Name").value != "undefined") {
+        document.getElementById("Name").value = document.getElementById("LinkLabel").innerHTML;
+      } else {
+        document.getElementById("Name").value = "";
       }
 
     }
@@ -635,9 +644,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     // console.log(first);
 
-    if (!first) {
-      localStorage.setItem('nameField', '');
-    }
+    // if (!first) {
+    //   localStorage.setItem('nameField', '');
+    // }
 
     if (first) {
       first = false;

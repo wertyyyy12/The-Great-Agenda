@@ -34,7 +34,8 @@
       text-decoration: none;
       visibility: hidden;
       opacity: 0;
-      transition: visibility 0s, opacity 0.35s linear;
+      /* transition: visibility 0s, opacity 0.35s linear; */
+      transition-duration: 0.2s;
       font-size: 17px;
       cursor: pointer;
     }
@@ -130,34 +131,35 @@
       text-decoration: none;
       visibility: hidden;
       opacity: 0;
-      transition: visibility 0s, opacity 0.35s linear;
+      /* transition: visibility 0s, opacity 0.35s shadow 0.35s linear; */
       font-size: 17px;
       cursor: pointer;
+      transition-duration: 0.2s;
 
     }
 
     .Remove:hover {
       background-color: #FF0000;
       color: white;
-      box-shadow: 2px 2px 2px grey;
+      box-shadow: 2px 2px 3px DarkRed;
     }
 
     .finish:hover {
       background-color: #4CAF50;
       color: white;
-      box-shadow: 3px 3px 3px grey;
+      box-shadow: 3px 3px 3px green;
     }
 
     .mark:hover {
       background-color: #ffc800;
       color: white;
-      box-shadow: 2px 2px 2px grey;
+      box-shadow: 2px 2px 3px gold;
     }
 
     .edit:hover {
       background-color: #29d6cb;
       color: white;
-      box-shadow: 2px 2px 2px grey;
+      box-shadow: 2px 2px 3px green;
     }
 
     #LinkLabel {
@@ -216,7 +218,8 @@
       text-align: center;
       text-decoration: none;
       opacity: 0;
-      transition: visibility 0s, opacity 0.35s linear;
+      /* transition: visibility 0s, opacity 0.35s linear; */
+      transition-duration: 0.2s;
       font-size: 17px;
       cursor: pointer;
     }
@@ -234,6 +237,7 @@
       border: 1px solid DarkRed;
       width: 630px;
       margin-top: -20px;
+      /* margin-bottom: 0px; */
       transition-duration: 0.35s;
     }
 
@@ -257,6 +261,10 @@
     #HelpPage {
       margin-bottom: 15px;
     }
+
+    h2 {
+      margin-bottom: 35px;
+    }
   </style>
   <script type="text/javascript" src="js/window.js"></script>
   <script type="text/javascript" src="background.js"></script>
@@ -265,13 +273,13 @@
 <body>
   <h1>The Agenda</h1>
   <div id="HelpPage"><a class="help" href="help.html" target="_blank">Help Page</a></div>
-  <h2 id="editLabel">(Editing)</h2>
   <div id="taskListBox">
     <ul id="taskList"></ul>
   </div>
   <!-- <hr> -->
 
   <br><br>
+  <h2 id="editLabel">(Editing)</h2>
   <div id="shadowBox">
     <form id="aInfo">
       <label class="InfoLabel">Name: </label><input class="input" type="text" placeholder="Name of task" id="Name" autocomplete="off"><br><br>

@@ -3,7 +3,7 @@
 -Allow assignments to be submitted w/o name but the name = title of link (medium priority)
 
 -Use jQuery highlight effect to highlight edited and newly added assignments
--Use template literals to clean up string code
+-Name box- on Space delete entire name
 -Fix body box overflow bug
 -Backspace to delete an assignment, space to edit it, tab to mark it??
 -Make it to a table layout
@@ -12,8 +12,10 @@
 -Add notebook page theme for info collection?
 -Make the heading fixed?
 -Add date number to pretty date under date field
-
-
+-Make month go to next month if date changed to over 31
+-Update title
+-Background color of tables - only number stays red and everything else appears in appropriate backgroundColor
+-Todays date at the top?
 
 
 

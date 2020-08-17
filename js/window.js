@@ -57,6 +57,15 @@ function isUrl(string) {
   }
 }
 
+const _MS_PER_DAY = 1000 * 60 * 60 * 24;
+// a and b are javascript Date objects
+function dateDiffInDays(a, b) {
+  // Discard the time and time-zone information.
+  const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+  const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+
+  return Math.floor((utc2 - utc1) / _MS_PER_DAY);
+}
 
 //Takes out the < and > characters from a string to prevent input fields from doing any stupid tricks with HTML.
 //We also filter out the 'javascript:' prefix just to be safe.
@@ -119,8 +128,10 @@ function changePrettyDate() {
   // var d = new Date(document.getElementById("Date").value);
   date = getMDY(date);
   var correctD = new Date(Date.UTC(date.year, date.month - 1, date.day + 1));
+  var today = new Date();
+  var daysRemaining = dateDiffInDays(today, correctD);
   // var dateString = days[correctD.getDay()] + ", " + months[date.month] + " " + date.day + " ";
-  var dateString = `${days[correctD.getDay()]}, ${months[date.month]} ${date.day} `
+  var dateString = `${days[correctD.getDay()]}, ${months[date.month]} ${date.day} (${daysRemaining})`
   prettyDate.innerHTML = dateString;
 }
 
@@ -190,15 +201,7 @@ function changeTitleExtUrl(url) {
 
 
 }
-const _MS_PER_DAY = 1000 * 60 * 60 * 24;
-// a and b are javascript Date objects
-function dateDiffInDays(a, b) {
-  // Discard the time and time-zone information.
-  const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
-  const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
 
-  return Math.floor((utc2 - utc1) / _MS_PER_DAY);
-}
 
 function checkIfMarked(listChildren) {
   var marked = false;
@@ -269,11 +272,25 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
   }
 
-  document.getElementById("Link").addEventListener("keydown", handleKeys);
+  // function onNamePress(key) {
+  //
+  // }
+
+
+
+  // var firstNameClear = true;
+  // document.getElementById("Name").addEventListener("keydown", function(key) {
+  //   if (firstNameClear) {
+  //     if (key.code == "Backspace") {
+  //       document.getElementById("Name").value = "";
+  //       firstNameClear = false;
+  //     }
+  //   }
+  // });
   document.getElementById("Name").addEventListener("change", function() {
     if (document.getElementById("Name").value == "") {
       document.getElementById("Name").style["border-bottom"] = "2px solid red";
-      document.getElementById("Name").value = document.getElementById("LinkLabel").innerHTML;
+      // document.getElementById("Name").value = document.getElementById("LinkLabel").innerHTML;
     } else {
       document.getElementById("Name").style["border-bottom"] = "2px solid green";
     }
@@ -297,14 +314,15 @@ document.addEventListener("DOMContentLoaded", function(event) {
         changeTitleExtUrl(document.getElementById("Link").value);
       }
 
-      if (document.getElementById("Name").value != "undefined") {
-        document.getElementById("Name").value = document.getElementById("LinkLabel").innerHTML;
-      } else {
-        document.getElementById("Name").value = "";
-      }
+      // if (document.getElementById("Name").value != "undefined") {
+      //   document.getElementById("Name").value = document.getElementById("LinkLabel").innerHTML;
+      // } else {
+      //   document.getElementById("Name").value = "";
+      // }
 
     }
   });
+  document.getElementById("Link").addEventListener("keydown", handleKeys);
 
   function clr() {
     chrome.notifications.clear('tst');
@@ -330,7 +348,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     var editLabel = document.getElementById('editLabel');
     var cancel = document.getElementById("Cancel");
 
-    console.log(link);
+    // console.log(link);
 
     function setVisualtoNormal() {
       //Reverts any visual changes caused by edit button
@@ -606,6 +624,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
       });
     }
 
+    // console.log($("li"));
+
     //PSEUDOCODE:
     //1. Loop through all assignments
     //2. Find earliest due date
@@ -644,16 +664,23 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
       var removeIndex = listItems.indexOf(minElement);
       listItems = listItems.filter(item => item !== minElement); //step 4
-      console.log(listItems);
+      // console.log(listItems);
     });
 
-
-
-    // console.log(first);
-
-    // if (!first) {
-    //   localStorage.setItem('nameField', '');
+    // var maxScrollLength = 0;
+    // var maxScrollItem = 0;
+    // for (item of items) {
+    //   var width = item.offsetWidth;
+    //   if (width > maxScrollLength) {
+    //     maxScrollItem = item;
+    //     maxScrollLength = width;
+    //   }
+    //
     // }
+    // console.log(maxScrollLength);
+    // document.getElementById("taskListBox").style.offsetWidth = maxScrollLength + 500;
+    // console.log(document.getElementById("taskListBox").style.offsetWidth);
+
 
     if (first) {
       first = false;

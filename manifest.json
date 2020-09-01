@@ -6,10 +6,10 @@
   "commands": {
     "_execute_browser_action": {
       "suggested_key": {
-        "windows": "Ctrl+Shift+X",
-        "mac": "Command+Shift+X",
-        "chromeos": "Ctrl+Shift+X",
-        "linux": "Ctrl+Shift+X"
+        "windows": "Ctrl+Shift+A",
+        "mac": "Command+Shift+A",
+        "chromeos": "Ctrl+Shift+A",
+        "linux": "Ctrl+Shift+A"
       }
     }
 

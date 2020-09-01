@@ -8,7 +8,6 @@ window.onload = function() {
   // setTimeout(function() {
   //   document.getElementById("aInfo").submit()
   // }, 250);
-  var ok = "ok";
   first = true;
   document.getElementById("DONEDONE").click();
   document.getElementById("Name").value = localStorage.getItem('nameField');
@@ -237,7 +236,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
   //Autofill url of open tab
   chrome.tabs.query({
     active: true,
-    lastFocusedWindow: true
+    lastFocusedWindow: true,
+    currentWindow: true
   }, tabs => {
     try {
       activeTab = tabs[0];
@@ -260,7 +260,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
     if (e.keyCode == 32) {
       chrome.tabs.query({
         active: true,
-        highlighted: true
+        lastFocusedWindow: true,
+        currentWindow: true
       }, tabs => {
         var url = tabs[0].url;
         document.getElementById("Link").value = url;

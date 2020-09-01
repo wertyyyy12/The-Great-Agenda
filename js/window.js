@@ -8,6 +8,7 @@ window.onload = function() {
   // setTimeout(function() {
   //   document.getElementById("aInfo").submit()
   // }, 250);
+  var ok = "ok";
   first = true;
   document.getElementById("DONEDONE").click();
   document.getElementById("Name").value = localStorage.getItem('nameField');

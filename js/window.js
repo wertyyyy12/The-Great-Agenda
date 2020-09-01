@@ -9,6 +9,7 @@ window.onload = function() {
   //   document.getElementById("aInfo").submit()
   // }, 250);
   var ok = "ok";
+  var okokok = "not ok";
   first = true;
   document.getElementById("DONEDONE").click();
   document.getElementById("Name").value = localStorage.getItem('nameField');

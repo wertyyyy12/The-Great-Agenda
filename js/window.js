@@ -687,7 +687,35 @@ document.addEventListener("DOMContentLoaded", function(event) {
       localStorage.setItem("nameField", "");
     }
 
+    console.log('potato');
+    console.log(itemsAsArray);
     if (first) {
+      itemsAsArray.forEach(function(item) {
+        console.log(item.children[0]);
+        try {
+          var link = item.children[0].children[0].href;
+        } catch {
+          var link = "";
+        }
+        console.log(link);
+
+        chrome.tabs.query({
+          active: true,
+          highlighted: true
+        }, tabs => {
+          console.log(tabs);
+          //If the url/titles are not valid, set them to blank and handle them accordingly (set favicon image and title field to blank.)
+          try {
+            var url = tabs[0].url;
+          } catch {
+            var url = "";
+          }
+
+          if (link == url) {
+            item.style.backgroundColor = "#aeeb34";
+          }
+        });
+      });
       first = false;
     }
 

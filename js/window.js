@@ -683,10 +683,15 @@ document.addEventListener("DOMContentLoaded", function(event) {
     // document.getElementById("taskListBox").style.offsetWidth = maxScrollLength + 500;
     // console.log(document.getElementById("taskListBox").style.offsetWidth);
 
+    if (!first) {
+      localStorage.setItem("nameField", "");
+    }
 
     if (first) {
       first = false;
     }
+
+
     // chrome.storage.local.set({'tasklist': list.innerHTML});
     localStorage.setItem('tasklist', list.innerHTML);
   });

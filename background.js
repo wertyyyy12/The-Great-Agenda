@@ -1,6 +1,7 @@
 var hours = [7, 8, 9, 11, 13, 15, 17, 19, 21, 23];
 //Fill an array with generated dates that have the day of today but have the hour of the hours desired to potentially ping someone.
 var generatedHdates = [];
+
 for (i = 0; i < hours.length; i++) {
   var generatedDate = new Date(getNow().year, getNow().month, getNow().day, hours[i]);
   generatedHdates.push(generatedDate);
@@ -9,6 +10,7 @@ for (i = 0; i < hours.length; i++) {
 function clr(id) {
   chrome.notifications.clear(id);
 }
+
 function getNow() {
   var rightNow = new Date();
   var now = {
@@ -24,6 +26,7 @@ function getNow() {
 
   return now;
 }
+
 function DiffofDatesInms(a, b) {
   //A and B are the dates a and b in ms
   var A = a.getTime();
@@ -32,6 +35,7 @@ function DiffofDatesInms(a, b) {
   return Math.abs(B - A);
 
 }
+
 function compareDates(a, b) {
   var A = a.getTime();
   var B = b.getTime();
@@ -46,23 +50,23 @@ function compareDates(a, b) {
     return 'equal';
   }
 }
+
 function getNextN() {
   var nextDate = 0;
   if (getNow().hour < 24) {
-    for (i = generatedHdates.length-1; i >= 0; i = i - 1) {
+    for (i = generatedHdates.length - 1; i >= 0; i = i - 1) {
       if (compareDates(generatedHdates[i], getNow().total) == 'greater') {
         nextDate = generatedHdates[i];
-      }
-      else {
+      } else {
         return nextDate;
       }
     }
-  }
-  else {
+  } else {
     return generatedHdates[0].setDate(generatedHdates[0].getDate() + 1);
     console.log("Setting to tmrw morning.");
   }
 }
+
 function setAtoNext() {
   if (getNow().hour < 24) {
     chrome.alarms.clearAll();
@@ -71,16 +75,17 @@ function setAtoNext() {
     console.log("Next notification: " + getNextN());
 
     try {
-     var finalDate = getNextN().getTime();
-    }
-    catch {
+      var finalDate = getNextN().getTime();
+    } catch {
       console.log("Next notification set to morning.");
       var morningCopy = generatedHdates[0]
       var finalDate = morningCopy.setDate(getNow().total.getDate() + 1);
       console.log("Morning notification, setting to: " + finalDate);
     }
-     console.log('Timestamp set: ' + finalDate);
-     chrome.alarms.create('ping', {when: finalDate});
+    console.log('Timestamp set: ' + finalDate);
+    chrome.alarms.create('ping', {
+      when: finalDate
+    });
   }
 }
 setAtoNext(); //on boot set A
@@ -108,6 +113,7 @@ chrome.runtime.onInstalled.addListener(function() {
 
 function checkIfDueSoon() {
   var msPerDay = 1000 * 60 * 60 * 24;
+
   function dateDiffInDays(a, b) {
     // Discard the time and time-zone information.
     const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
@@ -135,8 +141,7 @@ function checkIfDueSoon() {
     console.log(nameOfAssign);
     if (remainingDays <= 1) {
       sendNotfication = true;
-    }
-    else {
+    } else {
       sendNotfication = false;
     }
 
@@ -148,11 +153,9 @@ function checkIfDueSoon() {
         message: message,
         priority: 1,
         iconUrl: "chrome-extension://paomcbcgpoikdcjhbanhllhdbemcjokf/Agenda_32.png",
-        buttons: [
-          {
+        buttons: [{
           title: 'Mark as done'
-          }
-        ]
+        }]
       }
     }
 
@@ -164,11 +167,9 @@ function checkIfDueSoon() {
         message: message,
         priority: 1,
         iconUrl: "chrome-extension://paomcbcgpoikdcjhbanhllhdbemcjokf/Agenda_32.png",
-        buttons: [
-          {
+        buttons: [{
           title: 'Mark as done'
-          }
-        ]
+        }]
       }
     }
 
@@ -180,14 +181,13 @@ function checkIfDueSoon() {
         message: message,
         priority: 1,
         iconUrl: "chrome-extension://paomcbcgpoikdcjhbanhllhdbemcjokf/Agenda_32.png",
-        buttons: [
-          {
+        buttons: [{
           title: 'Mark as done'
-          }
-        ]
+        }]
       }
     }
 
+    console.log('sendNotfication');
     if (sendNotfication) {
       clr(nameOfAssign);
       chrome.notifications.create(nameOfAssign, dueSoonopt);
@@ -195,64 +195,64 @@ function checkIfDueSoon() {
     }
   }
 }
-  var lastA = localStorage.getItem("lastAtime");
-  console.log("Last alarm was " + DiffofDatesInms(getNow().total, new Date(lastA)) / 60000 + " minutes ago.");
-  if (DiffofDatesInms(getNow().total, new Date(lastA)) > 7200000) {
-    console.log("MISSED!");
-    checkIfDueSoon();
-    localStorage.setItem("lastAtime", getNow().total.toString());
-  }
+var lastA = localStorage.getItem("lastAtime");
+console.log("Last alarm was " + DiffofDatesInms(getNow().total, new Date(lastA)) / 60000 + " minutes ago.");
+if (DiffofDatesInms(getNow().total, new Date(lastA)) > 7200000) {
+  console.log("MISSED!");
+  checkIfDueSoon();
+  localStorage.setItem("lastAtime", getNow().total.toString());
+}
 
-  // checkIfDueSoon();
+// checkIfDueSoon();
 
-  chrome.alarms.onAlarm.addListener(function(alarm) {
-    console.log("Beep from " + alarm.name);
-    //Set last sucessful alarm time to right now.
-    // chrome.storage.sync.set({"lastAtime": getNow().total.toString()});
-    localStorage.setItem("lastAtime", getNow().total.toString());
-    checkIfDueSoon();
-    setAtoNext();
-  });
+chrome.alarms.onAlarm.addListener(function(alarm) {
+  console.log("Beep from " + alarm.name);
+  //Set last sucessful alarm time to right now.
+  // chrome.storage.sync.set({"lastAtime": getNow().total.toString()});
+  localStorage.setItem("lastAtime", getNow().total.toString());
+  checkIfDueSoon();
+  setAtoNext();
+});
 
 
 chrome.notifications.onButtonClicked.addListener(function(notifId, btnIdx) {
-    var htmlCopy = localStorage.getItem("tasklist");
-    console.log(htmlCopy);
-    var doc = new DOMParser().parseFromString(htmlCopy, "text/html");
-    doc.innerHTML = htmlCopy;
-    console.log(doc);
+  var htmlCopy = localStorage.getItem("tasklist");
+  console.log(htmlCopy);
+  var doc = new DOMParser().parseFromString(htmlCopy, "text/html");
+  doc.innerHTML = htmlCopy;
+  console.log(doc);
+  console.log(notifId);
+  //
+  // var win = window.open('mainWindow.html');
+
+  var targets = Array.prototype.slice.call(doc.getElementsByTagName("li"));
+  console.log(targets);
+  var finalindex;
+  var finalTarget;
+  targets.forEach((item, index) => {
+    console.log(item.id);
     console.log(notifId);
-    //
-    // var win = window.open('mainWindow.html');
+    if (item.id.trim() == notifId.trim()) {
+      console.log("match found.");
+      console.log(targets[index]);
+      finalTarget = targets[index].outerHTML;
+    }
+  });
 
-    var targets = Array.prototype.slice.call(doc.getElementsByTagName("li"));
-    console.log(targets);
-    var finalindex;
-    var finalTarget;
-    targets.forEach((item, index) => {
-      console.log(item.id);
-      console.log(notifId);
-      if (item.id.trim() == notifId.trim()) {
-        console.log("match found.");
-        console.log(targets[index]);
-        finalTarget = targets[index].outerHTML;
-      }
-    });
+  console.log(finalTarget);
 
-    console.log(finalTarget);
+  var removedTargetHtml = htmlCopy.replace(finalTarget, "");
+  console.log(removedTargetHtml);
+  localStorage.setItem("tasklist", removedTargetHtml);
+  window.location.href = "mainWindow.html";
+  // chrome.tabs.create({
+  //   active: true,
+  //   url:  'mainWindow.html'
+  // }, null);
 
-     var removedTargetHtml = htmlCopy.replace(finalTarget, "");
-     console.log(removedTargetHtml);
-     localStorage.setItem("tasklist", removedTargetHtml);
-     window.location.href="mainWindow.html";
-     // chrome.tabs.create({
-     //   active: true,
-     //   url:  'mainWindow.html'
-     // }, null);
-
-    // chrome.storage.sync.set({'tasklist': removedTargetHtml});
-    // win.close();
-    //setTimeout(function(){target.remove(); chrome.storage.sync.set({'tasklist': list.innerHTML});}, 250);
+  // chrome.storage.sync.set({'tasklist': removedTargetHtml});
+  // win.close();
+  //setTimeout(function(){target.remove(); chrome.storage.sync.set({'tasklist': list.innerHTML});}, 250);
 });
 
 document.addEventListener('DOMContentLoaded', () => {

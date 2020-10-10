@@ -145,52 +145,19 @@ function checkIfDueSoon() {
       sendNotfication = false;
     }
 
-    if (remainingDays == 1) {
-      var message = nameOfAssign + " is due tomorrow."
-      var dueSoonopt = {
-        type: "basic",
-        title: "Assignment due",
-        message: message,
-        priority: 1,
-        iconUrl: "chrome-extension://paomcbcgpoikdcjhbanhllhdbemcjokf/Agenda_32.png",
-        buttons: [{
-          title: 'Mark as done'
-        }]
-      }
-    }
-
-    if (remainingDays == 0) {
-      var message = nameOfAssign + " is due today."
-      var dueSoonopt = {
-        type: "basic",
-        title: "Assignment due today",
-        message: message,
-        priority: 1,
-        iconUrl: "chrome-extension://paomcbcgpoikdcjhbanhllhdbemcjokf/Agenda_32.png",
-        buttons: [{
-          title: 'Mark as done'
-        }]
-      }
-    }
-
-    if (remainingDays < 0) {
-      var message = nameOfAssign + " is overdue!"
-      var dueSoonopt = {
-        type: "basic",
-        title: "Assignment overdue",
-        message: message,
-        priority: 1,
-        iconUrl: "chrome-extension://paomcbcgpoikdcjhbanhllhdbemcjokf/Agenda_32.png",
-        buttons: [{
-          title: 'Mark as done'
-        }]
-      }
-    }
 
     console.log('sendNotfication');
     if (sendNotfication) {
-      clr(nameOfAssign);
-      chrome.notifications.create(nameOfAssign, dueSoonopt);
+      var message = "Task(s) are due soon."
+      var dueSoonopt = {
+        type: "basic",
+        title: "Task due soon",
+        message: message,
+        priority: 1,
+        iconUrl: "chrome-extension://paomcbcgpoikdcjhbanhllhdbemcjokf/Agenda_32.png"
+      }
+      clr("soonDue");
+      chrome.notifications.create("soonDue", dueSoonopt);
       sendNotfication = false;
     }
   }

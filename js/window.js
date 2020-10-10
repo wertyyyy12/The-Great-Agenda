@@ -636,6 +636,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
     //3. Move this to top
     //4. Take out this one from the loop array
     //5. Repeat above until done (repeat as many items as there are items)
+
+
     var itemsAsArray = Array.prototype.slice.call(items);
     var listItems = Array.prototype.slice.call(document.getElementsByTagName("li"));
     var top = 0;

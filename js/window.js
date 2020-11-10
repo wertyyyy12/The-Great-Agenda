@@ -375,6 +375,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
   });
   document.getElementById("Link").addEventListener("keydown", handleKeys);
   var itemHovered; //see line ~466
+
+  //item hover + keyboard actions (backspace -> delete), (arrowup/down -> increment/decrement date on item)
   document.addEventListener("keydown", function(e) {
     if (itemHovered) {
       if (e.code == "Backspace") {
@@ -635,6 +637,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     //Hide right click contextmenu so that right click scrolling is actually usable.
     document.addEventListener('contextmenu', event => event.preventDefault());
+
+    window.addEventListener("keydown", function(e) {
+      // space and arrow keys 
+      if(["Space", "ArrowLeft", "ArrowUp", "ArrowRight", "ArrowDown"].indexOf(e.code) > -1) {
+          e.preventDefault();
+      }
+  }, false);
 
     links = document.getElementsByTagName('a');
     var scroll = 0; //FLAGS WHOHOOO

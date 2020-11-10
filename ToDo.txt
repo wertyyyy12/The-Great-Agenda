@@ -26,6 +26,8 @@
 -Note card for task 'notes'
 -assignment searching?
 
+-minor visual bug: sometimes the text colors for closer due dates (<= 1 day) don't show accurately when 
+switching dates with arrows
 
 
 

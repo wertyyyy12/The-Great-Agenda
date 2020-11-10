@@ -380,20 +380,28 @@ document.addEventListener("DOMContentLoaded", function(event) {
       if (e.code == "Backspace") {
         removeItem(itemHovered.parentElement);
       }
+      if (!editingFlag) {
+        if (e.code == "ArrowUp" || e.code == "ArrowDown") {
+          if (e.code == "ArrowUp") {
+            var increment = 1;
 
-      if (e.code == "ArrowUp") {
-        if (!editingFlag) {
+          }
+
+          if (e.code == "ArrowDown") {
+            var increment = -1;
+          }
+
           var dateElement = itemHovered.parentElement.getElementsByClassName("dateStr")[0];
           var newDate = new Date(dateElement.id);
-          newDate.setDate(newDate.getDate() + 1);
+          newDate.setDate(newDate.getDate() + increment);
           dateElement.id = newDate;
 
           var dateString = `${days[newDate.getDay()]}, ${months[newDate.getMonth()]} ${newDate.getDate() + 1} `;
           dateElement.innerHTML = dateString;
           updateDateDistances();
           localStorage.setItem('tasklist', list.innerHTML);
-        }
       }
+    }
   }
   });
 

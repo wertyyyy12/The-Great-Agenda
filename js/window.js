@@ -276,6 +276,18 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
   }
 
+  function removeItem(item) {
+    lists = document.getElementsByTagName('li');
+    //target is the li element
+    var target = item;
+    target.style.opacity = '0';
+    setTimeout(function() {
+      target.remove();
+      localStorage.setItem('tasklist', list.innerHTML);
+    }, 250);
+    //          this.parentElement.parentElement.remove();
+    //localStorage.setItem('tasklist', list.innerHTML);
+  }
   // function onNamePress(key) {
   //
   // }
@@ -327,10 +339,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
   });
   document.getElementById("Link").addEventListener("keydown", handleKeys);
-
-  function clr() {
-    chrome.notifications.clear('tst');
-  }
+  var itemHovered; //see line 465
+  document.addEventListener("keydown", function(e) {
+    if (e.code == "Backspace") {
+      if (itemHovered) {
+        removeItem(itemHovered.parentElement);
+      }
+    }
+  });
 
   var editingFlag = false; //A boolean flag to use later
   var itemChanged = 0;
@@ -441,18 +457,22 @@ document.addEventListener("DOMContentLoaded", function(event) {
     numB = buttons.length;
     for (button of buttons) {
       button.addEventListener('click', function() {
-        lists = document.getElementsByTagName('li');
-        //target is the li element
-        var target = this.parentElement.parentElement;
-        target.style.opacity = '0';
-        setTimeout(function() {
-          target.remove();
-          localStorage.setItem('tasklist', list.innerHTML);
-        }, 250);
-        //          this.parentElement.parentElement.remove();
-        //localStorage.setItem('tasklist', list.innerHTML);
+        removeItem(this.parentElement.parentElement);
       });
     }
+
+    //hover listeners for each list item
+
+    for (item of items) {
+      item.addEventListener("mouseover", function() {
+        itemHovered = this;
+      });
+
+      item.addEventListener("mouseout", function() {
+        itemHovered = false;
+      });
+    }
+
 
     cancel.addEventListener('click', function() {
       setVisualtoNormal();

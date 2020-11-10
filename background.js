@@ -97,7 +97,7 @@ chrome.runtime.onInstalled.addListener(function() {
   //   type: "basic",
   //   title: "Installed",
   //   message: 'Extension install',
-  //   iconUrl: "chrome-extension://paomcbcgpoikdcjhbanhllhdbemcjokf/Agenda_32.png",
+  //   iconUrl: "chrome-extension://mmimpjjgmcmnlkphmdinbkmjdfhmlkce/Agenda_32.png",
   //   buttons: [
   //     {
   //     title: 'OK'
@@ -154,7 +154,7 @@ function checkIfDueSoon() {
         title: "Task due soon",
         message: message,
         priority: 1,
-        iconUrl: "chrome-extension://paomcbcgpoikdcjhbanhllhdbemcjokf/Agenda_32.png"
+        iconUrl: "chrome-extension://mmimpjjgmcmnlkphmdinbkmjdfhmlkce/Agenda_32.png"
       }
       clr("soonDue");
       chrome.notifications.create("soonDue", dueSoonopt);

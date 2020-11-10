@@ -24,6 +24,7 @@ window.onload = function() {
 
 };
 
+var items = document.getElementsByClassName('item');
 
 //Get month, day, and year given a date in input form (ex: 2005-9-12)
 //Acess with .month, .day, and .year properties of returned object
@@ -288,9 +289,43 @@ document.addEventListener("DOMContentLoaded", function(event) {
     //          this.parentElement.parentElement.remove();
     //localStorage.setItem('tasklist', list.innerHTML);
   }
-  // function onNamePress(key) {
-  //
-  // }
+  
+
+  function updateDateDistances() {
+    tills = document.getElementsByClassName("daysTill");
+
+    dates = document.getElementsByClassName("dateStr");
+    len = tills.length;
+
+    //Format assignment due date colors based on due dates.
+    for (var i = 0; i < len; i += 1) {
+      var today = new Date();
+      var dateInfo = dates[i].id;
+      // var dateInfo = originalID; //.replace(/ok/g, ' ');
+      var storedDate = new Date(dateInfo);
+      remainingDays = dateDiffInDays(today, storedDate);
+      tills[i].innerHTML = remainingDays;
+      tills[i].id = remainingDays;
+      if (remainingDays == 1) {
+        tills[i].style.color = "red";
+      } else if (remainingDays == 0) {
+        items[i].style.color = "DarkRed";
+        items[i].style.fontWeight = 900;
+        tills[i].innerHTML = 'TODAY';
+        tills[i].style.color = "red";
+      } else if (remainingDays < 0) {
+        items[i].style.color = "red";
+        items[i].style.fontWeight = 900;
+        tills[i].innerHTML = 'OVERDUE';
+        tills[i].style.color = "red";
+      } else if (remainingDays > 1) {
+        items[i].style.color = "black";
+        items[i].style.fontWeight = 400;
+        tills[i].style.color = "black";
+      }
+
+    }
+  }
 
 
 
@@ -339,13 +374,27 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
   });
   document.getElementById("Link").addEventListener("keydown", handleKeys);
-  var itemHovered; //see line 465
+  var itemHovered; //see line ~466
   document.addEventListener("keydown", function(e) {
-    if (e.code == "Backspace") {
-      if (itemHovered) {
+    if (itemHovered) {
+      if (e.code == "Backspace") {
         removeItem(itemHovered.parentElement);
       }
-    }
+
+      if (e.code == "ArrowUp") {
+        if (!editingFlag) {
+          var dateElement = itemHovered.parentElement.getElementsByClassName("dateStr")[0];
+          var newDate = new Date(dateElement.id);
+          newDate.setDate(newDate.getDate() + 1);
+          dateElement.id = newDate;
+
+          var dateString = `${days[newDate.getDay()]}, ${months[newDate.getMonth()]} ${newDate.getDate() + 1} `;
+          dateElement.innerHTML = dateString;
+          updateDateDistances();
+          localStorage.setItem('tasklist', list.innerHTML);
+        }
+      }
+  }
   });
 
   var editingFlag = false; //A boolean flag to use later
@@ -363,7 +412,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     // var dateString = days[correctD.getDay()] + ", " + months[month] + " " + day + " ";
     var dateString = `${days[correctD.getDay()]}, ${months[month]} ${day} `;
     var link = document.getElementById("Link").value;
-    var items = document.getElementsByClassName('item');
+    // var items = document.getElementsByClassName('item');
     var textBoxes = [document.getElementById('Link'), document.getElementById('Date'), document.getElementById('Name')];
     var editLabel = document.getElementById('editLabel');
     var cancel = document.getElementById("Cancel");
@@ -549,6 +598,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
       });
     }
 
+    updateDateDistances();
 
 
     //MARK BUTTON
@@ -572,38 +622,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
         localStorage.setItem('tasklist', list.innerHTML);
 
       });
-    }
-
-
-
-    tills = document.getElementsByClassName("daysTill");
-
-    dates = document.getElementsByClassName("dateStr");
-    len = tills.length;
-
-    //Format assignment due date colors based on due dates.
-    for (var i = 0; i < len; i += 1) {
-      var today = new Date();
-      var dateInfo = dates[i].id;
-      // var dateInfo = originalID; //.replace(/ok/g, ' ');
-      var storedDate = new Date(dateInfo);
-      remainingDays = dateDiffInDays(today, storedDate);
-      tills[i].innerHTML = remainingDays;
-      tills[i].id = remainingDays;
-      if (remainingDays == 1) {
-        tills[i].style.color = "red";
-      } else if (remainingDays == 0) {
-        items[i].style.color = "DarkRed";
-        items[i].style.fontWeight = 900;
-        tills[i].innerHTML = 'TODAY';
-        tills[i].style.color = "red";
-      } else if (remainingDays < 0) {
-        items[i].style.color = "red";
-        items[i].style.fontWeight = 900;
-        tills[i].innerHTML = 'OVERDUE';
-        tills[i].style.color = "red";
-      }
-
     }
 
 

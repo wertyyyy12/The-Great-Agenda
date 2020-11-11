@@ -348,7 +348,49 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     localStorage.setItem('nameField', document.getElementById("Name").value);
   });
-  document.getElementById("Date").addEventListener('change', changePrettyDate);
+
+  var dateValues = ["", "", ""];
+  document.getElementById("Date").addEventListener('change', function() {
+    var date = this.value;
+    dateValues.push(date);
+    if (dateValues.length >= 4) {
+      dateValues.splice(0, 1);
+    }
+    
+    //dayN is N-1 days in the past
+    var date1 = getMDY(dateValues[2]);
+    var date2 = getMDY(dateValues[1]);
+    var date3 = getMDY(dateValues[0]);
+
+    console.log([date1, date2, date3]);
+
+    if (((date2.day == 30 && (date2.month == 4 || date2.month == 6 || date2.month == 9 || date2.month == 11)) || (date2.day == 31) || (dateValues[2] == ""))) { //if last day of month OR day is nonexistent
+
+      var day = date2.day;
+      var month = date2.month;
+      var year = date2.year;
+
+
+      console.log("uh oh");
+      console.log(day)
+      console.log(month);
+      day = "01";
+      if (month != 12) {
+        month++;
+        if (month < 10) {
+          month = `0${month}`;
+        }
+      }
+      else {
+        month = "01";
+        year++;
+      }
+      // this.value = `${year}-${month}-${day}`;
+      this.value = `${year}-${month}-${day}`;
+    }
+
+    changePrettyDate();
+  });
   document.getElementById("Link").addEventListener('change', function() {
     if (isUrl(document.getElementById("Link").value) == false) {
       console.log('tf are u doing my guy');

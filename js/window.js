@@ -393,6 +393,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
             var increment = -1;
           }
 
+          e.preventDefault(); //prevent scrolling while arrow editing a task
           var dateElement = itemHovered.parentElement.getElementsByClassName("dateStr")[0];
           var newDate = new Date(dateElement.id);
           newDate.setDate(newDate.getDate() + increment);
@@ -637,13 +638,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     //Hide right click contextmenu so that right click scrolling is actually usable.
     document.addEventListener('contextmenu', event => event.preventDefault());
-
-    window.addEventListener("keydown", function(e) {
-      // space and arrow keys 
-      if(["Space", "ArrowLeft", "ArrowUp", "ArrowRight", "ArrowDown"].indexOf(e.code) > -1) {
-          e.preventDefault();
-      }
-  }, false);
 
     links = document.getElementsByTagName('a');
     var scroll = 0; //FLAGS WHOHOOO

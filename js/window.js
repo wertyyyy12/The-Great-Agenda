@@ -24,6 +24,7 @@ window.onload = function() {
 
 };
 
+var items = document.getElementsByClassName('item');
 
 //Get month, day, and year given a date in input form (ex: 2005-9-12)
 //Acess with .month, .day, and .year properties of returned object
@@ -276,9 +277,55 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
   }
 
-  // function onNamePress(key) {
-  //
-  // }
+  function removeItem(item) {
+    lists = document.getElementsByTagName('li');
+    //target is the li element
+    var target = item;
+    target.style.opacity = '0';
+    setTimeout(function() {
+      target.remove();
+      localStorage.setItem('tasklist', list.innerHTML);
+    }, 250);
+    //          this.parentElement.parentElement.remove();
+    //localStorage.setItem('tasklist', list.innerHTML);
+  }
+  
+
+  function updateDateDistances() {
+    tills = document.getElementsByClassName("daysTill");
+
+    dates = document.getElementsByClassName("dateStr");
+    len = tills.length;
+
+    //Format assignment due date colors based on due dates.
+    for (var i = 0; i < len; i += 1) {
+      var today = new Date();
+      var dateInfo = dates[i].id;
+      // var dateInfo = originalID; //.replace(/ok/g, ' ');
+      var storedDate = new Date(dateInfo);
+      remainingDays = dateDiffInDays(today, storedDate);
+      tills[i].innerHTML = remainingDays;
+      tills[i].id = remainingDays;
+      if (remainingDays == 1) {
+        tills[i].style.color = "red";
+      } else if (remainingDays == 0) {
+        items[i].style.color = "DarkRed";
+        items[i].style.fontWeight = 900;
+        tills[i].innerHTML = 'TODAY';
+        tills[i].style.color = "red";
+      } else if (remainingDays < 0) {
+        items[i].style.color = "red";
+        items[i].style.fontWeight = 900;
+        tills[i].innerHTML = 'OVERDUE';
+        tills[i].style.color = "red";
+      } else if (remainingDays > 1) {
+        items[i].style.color = "black";
+        items[i].style.fontWeight = 400;
+        tills[i].style.color = "black";
+      }
+
+    }
+  }
 
 
 
@@ -301,7 +348,49 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     localStorage.setItem('nameField', document.getElementById("Name").value);
   });
-  document.getElementById("Date").addEventListener('change', changePrettyDate);
+
+  var dateValues = ["", "", ""];
+  document.getElementById("Date").addEventListener('change', function() {
+    var date = this.value;
+    dateValues.push(date);
+    if (dateValues.length >= 4) {
+      dateValues.splice(0, 1);
+    }
+    
+    //dayN is N-1 days in the past
+    var date1 = getMDY(dateValues[2]);
+    var date2 = getMDY(dateValues[1]);
+    var date3 = getMDY(dateValues[0]);
+
+    console.log([date1, date2, date3]);
+
+    if (((date2.day == 30 && (date2.month == 4 || date2.month == 6 || date2.month == 9 || date2.month == 11)) || (date2.day == 31) || (dateValues[2] == ""))) { //if last day of month OR day is nonexistent
+
+      var day = date2.day;
+      var month = date2.month;
+      var year = date2.year;
+
+
+      console.log("uh oh");
+      console.log(day)
+      console.log(month);
+      day = "01";
+      if (month != 12) {
+        month++;
+        if (month < 10) {
+          month = `0${month}`;
+        }
+      }
+      else {
+        month = "01";
+        year++;
+      }
+      // this.value = `${year}-${month}-${day}`;
+      this.value = `${year}-${month}-${day}`;
+    }
+
+    changePrettyDate();
+  });
   document.getElementById("Link").addEventListener('change', function() {
     if (isUrl(document.getElementById("Link").value) == false) {
       console.log('tf are u doing my guy');
@@ -327,10 +416,39 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
   });
   document.getElementById("Link").addEventListener("keydown", handleKeys);
+  var itemHovered; //see line ~466
 
-  function clr() {
-    chrome.notifications.clear('tst');
+  //item hover + keyboard actions (backspace -> delete), (arrowup/down -> increment/decrement date on item)
+  document.addEventListener("keydown", function(e) {
+    if (itemHovered) {
+      // if (e.code == "Backspace") {
+      //   removeItem(itemHovered.parentElement);
+      // }
+      if (!editingFlag) {
+        if (e.code == "ArrowUp" || e.code == "ArrowDown") {
+          if (e.code == "ArrowUp") {
+            var increment = 1;
+
+          }
+
+          if (e.code == "ArrowDown") {
+            var increment = -1;
+          }
+
+          e.preventDefault(); //prevent scrolling while arrow editing a task
+          var dateElement = itemHovered.parentElement.getElementsByClassName("dateStr")[0];
+          var newDate = new Date(dateElement.id);
+          newDate.setDate(newDate.getDate() + increment);
+          dateElement.id = newDate;
+
+          var dateString = `${days[newDate.getDay()]}, ${months[newDate.getMonth()]} ${newDate.getDate() + 1} `;
+          dateElement.innerHTML = dateString;
+          updateDateDistances();
+          localStorage.setItem('tasklist', list.innerHTML);
+      }
+    }
   }
+  });
 
   var editingFlag = false; //A boolean flag to use later
   var itemChanged = 0;
@@ -347,7 +465,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     // var dateString = days[correctD.getDay()] + ", " + months[month] + " " + day + " ";
     var dateString = `${days[correctD.getDay()]}, ${months[month]} ${day} `;
     var link = document.getElementById("Link").value;
-    var items = document.getElementsByClassName('item');
+    // var items = document.getElementsByClassName('item');
     var textBoxes = [document.getElementById('Link'), document.getElementById('Date'), document.getElementById('Name')];
     var editLabel = document.getElementById('editLabel');
     var cancel = document.getElementById("Cancel");
@@ -441,18 +559,22 @@ document.addEventListener("DOMContentLoaded", function(event) {
     numB = buttons.length;
     for (button of buttons) {
       button.addEventListener('click', function() {
-        lists = document.getElementsByTagName('li');
-        //target is the li element
-        var target = this.parentElement.parentElement;
-        target.style.opacity = '0';
-        setTimeout(function() {
-          target.remove();
-          localStorage.setItem('tasklist', list.innerHTML);
-        }, 250);
-        //          this.parentElement.parentElement.remove();
-        //localStorage.setItem('tasklist', list.innerHTML);
+        removeItem(this.parentElement.parentElement);
       });
     }
+
+    //hover listeners for each list item
+
+    for (item of items) {
+      item.addEventListener("mouseover", function() {
+        itemHovered = this;
+      });
+
+      item.addEventListener("mouseout", function() {
+        itemHovered = false;
+      });
+    }
+
 
     cancel.addEventListener('click', function() {
       setVisualtoNormal();
@@ -529,6 +651,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
       });
     }
 
+    updateDateDistances();
 
 
     //MARK BUTTON
@@ -552,38 +675,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
         localStorage.setItem('tasklist', list.innerHTML);
 
       });
-    }
-
-
-
-    tills = document.getElementsByClassName("daysTill");
-
-    dates = document.getElementsByClassName("dateStr");
-    len = tills.length;
-
-    //Format assignment due date colors based on due dates.
-    for (var i = 0; i < len; i += 1) {
-      var today = new Date();
-      var dateInfo = dates[i].id;
-      // var dateInfo = originalID; //.replace(/ok/g, ' ');
-      var storedDate = new Date(dateInfo);
-      remainingDays = dateDiffInDays(today, storedDate);
-      tills[i].innerHTML = remainingDays;
-      tills[i].id = remainingDays;
-      if (remainingDays == 1) {
-        tills[i].style.color = "red";
-      } else if (remainingDays == 0) {
-        items[i].style.color = "DarkRed";
-        items[i].style.fontWeight = 900;
-        tills[i].innerHTML = 'TODAY';
-        tills[i].style.color = "red";
-      } else if (remainingDays < 0) {
-        items[i].style.color = "red";
-        items[i].style.fontWeight = 900;
-        tills[i].innerHTML = 'OVERDUE';
-        tills[i].style.color = "red";
-      }
-
     }
 
 
@@ -636,6 +727,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
     //3. Move this to top
     //4. Take out this one from the loop array
     //5. Repeat above until done (repeat as many items as there are items)
+
+
     var itemsAsArray = Array.prototype.slice.call(items);
     var listItems = Array.prototype.slice.call(document.getElementsByTagName("li"));
     var top = 0;

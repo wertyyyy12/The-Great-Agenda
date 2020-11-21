@@ -421,9 +421,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
   //item hover + keyboard actions (backspace -> delete), (arrowup/down -> increment/decrement date on item)
   document.addEventListener("keydown", function(e) {
     if (itemHovered) {
-      if (e.code == "Backspace") {
-        removeItem(itemHovered.parentElement);
-      }
+      // if (e.code == "Backspace") {
+      //   removeItem(itemHovered.parentElement);
+      // }
       if (!editingFlag) {
         if (e.code == "ArrowUp" || e.code == "ArrowDown") {
           if (e.code == "ArrowUp") {
